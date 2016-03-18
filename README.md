@@ -7,3 +7,8 @@
                     |_|   |_| 
 ```
 :snake: smappboa is a high level interface for smappdragon.
+
+
+#author
+
+[yvan](https://github.com/yvan)
