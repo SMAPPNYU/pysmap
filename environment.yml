@@ -1,0 +1,8 @@
+name: smappy
+dependencies:
+- python=3.5
+- pip
+- pylint
+- pip:
+  - smappdragon>=0.0.21
+  
