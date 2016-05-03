@@ -13,9 +13,25 @@ methods on smappdragon are lower level and more general. whereas methods on smap
 
 another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
 
-- [smappy](https://github.com/SMAPPNYU/smappdragon#collection)
-    - [twitterutil](https://github.com/SMAPPNYU/smappdragon#base_collection)
-        - [](https://github.com/SMAPPNYU/smappdragon#get_iterator)
+- [twitterutil](#twitterutil)
+    - [smapp_collection](#base_collection)
+        - [get_tweets_containing](#get_tweets_containing)
+        - [#count_tweet_terms](#count_tweet_terms)
+        - [#get_tweet_texts](#get_tweet_texts)
+        - [#get_date_range](#get_date_range)
+        - [#tweet_language_is](#tweet_language_is)
+        - [#user_language_is](#user_language_is)
+        - [#exclude_retweets](#exclude_retweets)
+        - [#tweets_with_user_location](#tweets_with_user_location)
+        - [#get_geo_enabled](#get_geo_enabled)
+        - [#get_non_geo_enabled](#get_non_geo_enabled)
+        - [#limit_number_of_tweets](#limit_number_of_tweets)
+        - [#get_top_hashtags](#get_top_hashtags)
+        - [#get_top_urls](#get_top_urls)
+        - [#get_top_mentions](#get_top_mentions)
+        - [#get_top_media](#get_top_media)
+        - [#get_top_symbols](#get_top_symbols)
+
 
 #author
 
