@@ -14,7 +14,7 @@ methods on smappdragon are lower level and more general. whereas methods on smap
 another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
 
 - [twitterutil](#twitterutil)
-    - [smapp_collection](#base_collection)
+    - [smapp_collection](#smapp_collection)
         - [get_tweets_containing](#get_tweets_containing)
         - [count_tweet_terms](#count_tweet_terms)
         - [get_tweet_texts](#get_tweet_texts)
