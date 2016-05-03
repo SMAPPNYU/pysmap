@@ -13,6 +13,10 @@ methods on smappdragon are lower level and more general. whereas methods on smap
 
 another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
 
+- [smappy](https://github.com/SMAPPNYU/smappdragon#collection)
+    - [twitterutil](https://github.com/SMAPPNYU/smappdragon#base_collection)
+        - [](https://github.com/SMAPPNYU/smappdragon#get_iterator)
+
 #author
 
 [yvan](https://github.com/yvan)
