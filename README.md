@@ -35,256 +35,313 @@ another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp
 
 #twitterutil
 
-
-
-abstract:
-```python
-```
-
-practical:
-```python
-```
-
-*returns*
+the package with an array of twitter tools.
 
 #smapp_collection
 
-
+this is the smapp_collection class, an abstraction of smappdragon collections.
 
 abstract:
 ```python
+from smappy import SmappCollection
+
+collection = SmappCollection(DATA_TYPE, OTHER_INPUTS)
 ```
 
 practical:
 ```python
+from smappy import SmappCollection
+
+collection = SmappCollection('bson', '/path/to/my/bson/file.bson')
+# or
+collection = SmappCollection('mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1')
+# or
+collection = SmappCollection('json', '/path/to/my/file.json')
+# or
+collection = SmappCollection('csv', '/path/to/my/csv/file.csv')
 ```
 
-*returns*
+*returns* a collection object that you can use to call methods below on
+
+#iterate through tweets
+
+iterate through the tweets in the collection you've made.
+
+abstract:
+```python
+for tweet in collection:
+    print(tweet)
+```
+
+practical:
+```python
+for tweet in collection.get_tweets_containing('cat').tweet_language_is('fr'):
+    print(tweet)
+```
 
 #get_tweets_containing
 
-
+gets tweets containing the specified term.
 
 abstract:
 ```python
+collection.get_tweets_containing(TERM)
 ```
 
 practical:
 ```python
+collection.get_tweets_containing('cats')
 ```
 
-*returns*
+*returns* a collections which will filter out any tweets that do no have the specified term
 
 #count_tweet_terms
 
 
-
 abstract:
 ```python
+collection.count_tweet_terms(TERM)
 ```
 
 practical:
 ```python
+count = collection.count_tweet_terms('cats')
+print(count)
 ```
 
-*returns*
+*returns* a count of all the terms that match the specified term
 
 #get_tweet_texts
 
-
+returns a new collection where the only key will be tweets.
 
 abstract:
 ```python
+for text in collection.get_tweet_texts():
+    print(text)
 ```
 
 practical:
 ```python
+for text in collection.get_tweet_texts():
+    print(text)
 ```
 
 *returns*
 
 #get_date_range
 
-
+gets tweets in a date range specified by python datmetime objects
 
 abstract:
 ```python
+collection.get_date_range(START, END)
 ```
 
 practical:
 ```python
+from datetime import datetime
+collection.get_date_range(datetime(2014,1,30), datetime(2014,4,30))
 ```
 
-*returns*
+*returns* a collection that will only return tweets from the specified datetime range
 
 #tweet_language_is
 
-
+only returns tweets where the language is the specified one
 
 abstract:
 ```python
+collection.tweet_language_is(LANGUAGE_CODE)
 ```
 
 practical:
 ```python
+#get tweets in english
+collection.tweet_language_is('en')
 ```
 
-*returns*
+*returns* a collection where all the tweets have their text language as the specified language
 
 #user_language_is
 
-
+only returns tweets where the user's specified language is the specified one
 
 abstract:
 ```python
+collection.user_language_is(LANGUAGE_CODE)
 ```
 
 practical:
 ```python
+collection.user_language_is('en')
 ```
 
-*returns*
+*returns* a collection where all the tweets will come from users whose specified language matches the input
 
 #exclude_retweets
 
-
+exclueds retweets from your collection
 
 abstract:
 ```python
+collection.exclude_retweets()
 ```
 
 practical:
 ```python
+collection.exclude_retweets()
 ```
 
-*returns*
+*returns* a collection where there are no retweets
 
 #tweets_with_user_location
 
-
+returns tweets that have a user location
 
 abstract:
 ```python
+collection.tweets_with_user_location(PLACE_TERM)
 ```
 
 practical:
 ```python
+collection.tweets_with_user_location('CA')
 ```
 
-*returns*
+*returns* a collection where the places field of that tweet has the specified place
 
 #get_geo_enabled
 
-
+returns only geotagged tweets
 
 abstract:
 ```python
+collection.get_geo_enabled()
 ```
 
 practical:
 ```python
+collection.get_geo_enabled()
 ```
 
-*returns*
+*returns* a collection that only produces geo tagged tweets
 
 #get_non_geo_enabled
 
-
+returns only non geotagged tweets
 
 abstract:
 ```python
+collection.get_non_geo_enabled()
 ```
 
 practical:
 ```python
+collection.get_non_geo_enabled()
 ```
 
-*returns*
+*returns* a collection that only produces non geo tagged tweets
 
 #limit_number_of_tweets
 
-
+limits the # of tweets a collection can output
 
 abstract:
 ```python
+collection.limit_number_of_tweets(LIMIT_NUMEBER)
 ```
 
 practical:
 ```python
+collection.limit_number_of_tweets(145)
 ```
 
-*returns*
+*returns* a collection that is limited on terms of the number of tweets it can output
 
 #get_top_hashtags
 
-
+get the top hashtags from a collection
 
 abstract:
 ```python
+collection.get_top_hashtags(NUMBER_TOP)
 ```
 
 practical:
 ```python
+hashtags = collection.get_top_hashtags(5)
+print(hashtags)
 ```
 
-*returns*
+*returns* the top hashtags as a dictionary
 
 #get_top_urls
 
-
+get the top urls from a collection
 
 abstract:
 ```python
+collection.get_top_urls(NUMBER_TOP)
 ```
 
 practical:
 ```python
+urls = collection.get_top_urls(6)
+print(urls)
 ```
 
-*returns*
+*returns* the top urls from a collection
 
 #get_top_mentions
 
-
+get the top mentions from a collection (these are @ mentions)
 
 abstract:
 ```python
+collection.get_top_mentions(NUMBER_TOP)
 ```
 
 practical:
 ```python
+mentions = collection.get_top_mentions(40)
 ```
 
-*returns*
+*returns* the top @ mentions from a collection
 
 #get_top_media
 
-
+get the top media url references
 
 abstract:
 ```python
+collection.get_top_media(NUMBER_TOP)
 ```
 
 practical:
 ```python
+media = collection.get_top_media(3)
+print(media)
 ```
 
-*returns*
+*returns* the top media urls from a collection
 
 #get_top_symbols
 
-
+get the top symbols in a collection
 
 abstract:
 ```python
+collection.get_top_symbols(NUMBER_TOP)
 ```
 
 practical:
 ```python
+symbols = collection.get_top_symbols(10)
+print(symbols)
 ```
 
-*returns*
-
+*returns* the top symbols from a collection the number of top symbols depends on how man yspecified for input
 
 
 #author

@@ -29,19 +29,23 @@ class SmappCollection(object):
             else:
                 raise IOError('Could not find your input, it\'s mispelled or doesn\'t exist.')
 
-    def get_tweets_containing(self, term):
-        def tweet_contains_term(tweet):
-            return term in tweet['text']
-        self.collection.set_custom_filter(tweet_contains_term)
-        return self
+    def __iter__(self):
+        for tweet in self.collection.get_iterator():
+            yield tweet
+
+    def get_tweet_texts(self, term):
+        for tweet in self.collection.get_iterator():
+            yield tweet['text']
 
     def count_tweet_terms(self, term):
         def tweet_contains_term(tweet):
             return term in tweet['text']
         return sum(1 for tweet in self.collection.set_custom_filter(tweet_contains_term).get_iterator())
 
-    def get_tweet_texts(self, term):
-        self.collection.strip_tweets(['text'])
+    def get_tweets_containing(self, term):
+        def tweet_contains_term(tweet):
+            return term in tweet['text']
+        self.collection.set_custom_filter(tweet_contains_term)
         return self
 
     def get_date_range(self, start, end):
