@@ -6,24 +6,24 @@ class SmappCollection(object):
     __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
-    def __init__(self, data_source_type, **kwargs):
+    def __init__(self, data_source_type, *args):
             # non mongo collection
-            if 'filepath' in kwargs:
-                if data_source_type == 'bson':
-                    self.collection = smappdragon.BsonCollection(kwargs['filepath'])
-                elif data_source_type == 'json':
-                    self.collection = smappdragon.JsonCollection(kwargs['filepath'])
-                elif data_source_type == 'csv':
-                    self.collection = smappdragon.CsvCollection(kwargs['filepath'])
+            
+            if data_source_type == 'bson':
+                self.collection = smappdragon.BsonCollection(args[0])
+            elif data_source_type == 'json':
+                self.collection = smappdragon.JsonCollection(args[0])
+            elif data_source_type == 'csv':
+                self.collection = smappdragon.CsvCollection(args[0])
             # mongo collection
             elif data_source_type == 'mongo':
                 self.collection = smappdragon.MongoCollection(
-                    kwargs['host'],
-                    kwargs['port'],
-                    kwargs['user'],
-                    kwargs['password'],
-                    kwargs['database'],
-                    kwargs['collection']
+                    args[0],
+                    args[1],
+                    args[2],
+                    args[3],
+                    args[4],
+                    args[5]
                 )
             # some kinda error
             else:
