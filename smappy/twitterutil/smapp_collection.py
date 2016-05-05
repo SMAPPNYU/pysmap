@@ -33,7 +33,7 @@ class SmappCollection(object):
         for tweet in self.collection.get_iterator():
             yield tweet
 
-    def get_tweet_texts(self, term):
+    def get_tweet_texts(self):
         for tweet in self.collection.get_iterator():
             yield tweet['text']
 
@@ -59,11 +59,13 @@ class SmappCollection(object):
     def tweet_language_is(self, language_code):
         def language_in_tweet(tweet):
             return language_code in tweet['lang']
+        self.collection.set_custom_filter(language_in_tweet)
         return self
 
     def user_language_is(self, language_code):
         def language_in_tweet(tweet):
             return language_code in tweet['user']['lang']
+        self.collection.set_custom_filter(language_in_tweet)
         return self
 
     def exclude_retweets(self):
@@ -74,7 +76,7 @@ class SmappCollection(object):
 
     def tweets_with_user_location(self, place_term):
         def user_has_location(tweet):
-            return place_term in tweet['user']['location']
+            return tweet['user']['location'] and place_term in tweet['user']['location']
         self.collection.set_custom_filter(user_has_location)
         return self
 
