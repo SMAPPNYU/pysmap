@@ -2,4 +2,4 @@
 module
 '''
 
-from smappy.twitterutil.smapp_collection import SmappCollection
+from smappy.chirpy.smapp_collection import SmappCollection
