@@ -1,14 +1,14 @@
 import sys
 from setuptools import setup
 
-setup(name='smappy',
-	packages=['smappy', 'smappy.chirpy', 'smappy.ntwrk'],
+setup(name='pysmap',
+	packages=['pysmap', 'pysmap.chirpy', 'pysmap.ntwrk'],
 	version='0.0.1',
-	description='smappy is a set of tools for working with twitter data',
+	description='pysmapp is a set of tools for working with twitter data',
 	author='yvan',
 	author_email='yns207@nyu.edu',
-	url='https://github.com/SMAPPNYU/smappy',
-	keywords='twitter data tools smappy',
+	url='https://github.com/SMAPPNYU/pysmapp',
+	keywords='twitter data tools pysmapp',
 	license='MIT',
 	install_requires=[
 	  'smappdragon>=0.0.21'

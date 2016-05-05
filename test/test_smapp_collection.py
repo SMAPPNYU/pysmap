@@ -2,7 +2,7 @@ import os
 import unittest
 
 from test.config import config
-from smappy import SmappCollection
+from pysmap import SmappCollection
 
 class TestBaseCollection(unittest.TestCase):
 
