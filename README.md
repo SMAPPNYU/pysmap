@@ -1,10 +1,13 @@
 ```
- ___ _ __ ___   __ _ _ __  _ __  _   _ 
-/ __| '_ ` _ \ / _` | '_ \| '_ \| | | |
-\__ \ | | | | | (_| | |_) | |_) | |_| |
-|___/_| |_| |_|\__,_| .__/| .__/ \__, |
-                    |_|   |_|    |___/ 
+ _ __  _   _ ___ _ __ ___   __ _ _ __
+| '_ \| | | / __| '_ ` _ \ / _` | '_ \
+| |_) | |_| \__ \ | | | | | (_| | |_) |
+| .__/ \__, |___/_| |_| |_|\__,_| .__/
+|_|    |___/                    |_|
 ```
+
+[![PyPI](https://img.shields.io/pypi/v/pysmap.svg)](https://pypi.python.org/pypi/pysmap) [![PyPI](https://img.shields.io/pypi/dm/pysmap.svg)](https://pypi.python.org/pypi/pysmap) [![PyPI](https://img.shields.io/pypi/l/pysmap.svg)](https://github.com/SMAPPNYU/pysmap/blob/master/LICENSE)
+
 :snake: smappy is a high level toolkit for dealing with twitter data it also has a higher level interface for [smappdragon](https://github.com/SMAPPNYU/smappdragon). it aggregates functionality from the ld toolkit and functionality from our old util library smappPy.
 
 you might ask the difference between, smappy and smappdragon. smappy is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, smappy is just a set of filters.
