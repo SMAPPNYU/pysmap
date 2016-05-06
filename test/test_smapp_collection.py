@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from datetime import datetime
 from test.config import config
 from pysmap import SmappCollection
 
@@ -30,15 +31,15 @@ class TestBaseCollection(unittest.TestCase):
     	collection = SmappCollection('bson', file_path)
     	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
-    def test_smapp_mongo_collection_iterates(self):
-    	collection = SmappCollection('mongo', 
-    		config['mongo']['host'], 
-    		config['mongo']['port'], 
-    		config['mongo']['user'], 
-    		config['mongo']['password'],
-    		config['mongo']['database'],
-    		config['mongo']['collection'])
-    	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
+    # def test_smapp_mongo_collection_iterates(self):
+    # 	collection = SmappCollection('mongo', 
+    # 		config['mongo']['host'], 
+    # 		config['mongo']['port'], 
+    # 		config['mongo']['user'], 
+    # 		config['mongo']['password'],
+    # 		config['mongo']['database'],
+    # 		config['mongo']['collection'])
+    # 	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
     def test_get_tweet_texts(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
@@ -59,7 +60,10 @@ class TestBaseCollection(unittest.TestCase):
     	self.assertEqual(167, count)
 
     def test_get_date_range(self):
-    	pass
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        count = len([tweet for tweet in collection.get_date_range(datetime(2015,11,2), datetime(2015,11,3))])
+        self.assertEqual(26, count)
 
     def test_tweet_language_is(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])

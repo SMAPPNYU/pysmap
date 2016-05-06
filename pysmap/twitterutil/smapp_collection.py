@@ -49,7 +49,7 @@ class SmappCollection(object):
         return self
 
     def get_date_range(self, start, end):
-        if type(start) is not datetime.date or type(end) is not datetime.date:
+        if type(start) is not datetime.datetime or type(end) is not datetime.datetime:
             raise ValueError('inputs to date_range must be python datetime.date objects')
         def tweet_is_in_date_range(tweet):
             return tweet['timestamp'] >= start and tweet['timestamp'] < end
