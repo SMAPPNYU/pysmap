@@ -2,4 +2,4 @@
 module
 '''
 
-from pysmap.chirpy.smapp_collection import SmappCollection
+from pysmap.twitterutil.smapp_collection import SmappCollection
