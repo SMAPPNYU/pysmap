@@ -2,7 +2,7 @@ import sys
 from setuptools import setup
 
 setup(name='pysmap',
-	packages=['pysmap', 'pysmap.twitterutil', 'pysmap.ntwrk'],
+	packages=['pysmap', 'pysmap.twitterutil', 'pysmap.ntwrk', 'pysmap.viz'],
 	version='0.0.2',
 	description='pysmapp is a set of tools for working with twitter data',
 	author='yvan',

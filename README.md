@@ -8,14 +8,7 @@
 
 [![PyPI](https://img.shields.io/pypi/v/pysmap.svg)](https://pypi.python.org/pypi/pysmap) [![PyPI](https://img.shields.io/pypi/dm/pysmap.svg)](https://pypi.python.org/pypi/pysmap) [![PyPI](https://img.shields.io/pypi/l/pysmap.svg)](https://github.com/SMAPPNYU/pysmap/blob/master/LICENSE)
 
-:snake: smappy is a high level toolkit for dealing with twitter data it also has a higher level interface for [smappdragon](https://github.com/SMAPPNYU/smappdragon). it aggregates functionality from the ld toolkit and functionality from our old util library smappPy.
-
-you might ask the difference between, smappy and smappdragon. smappy is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, smappy is just a set of filters.
-
-methods on smappdragon are lower level and more general. whereas methods on smappy would be specific and rigid. so for example on smappdragon, you could [get all the entities](https://github.com/SMAPPNYU/smappdragon#top_entities), on smappy you would have to ask for hashtags, mentions, etc. (which are all entities).
-
-another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
-
+:snake: pysmap is a high level toolkit for dealing with twitter data it also has a higher level interface for [smappdragon](https://github.com/SMAPPNYU/smappdragon). it has functionality from the old toolkit and functionality from our old util library smappPy.
 - [twitterutil](#twitterutil)
     - [smapp_collection](#smapp_collection)
         - [get_tweets_containing](#get_tweets_containing)
@@ -348,6 +341,13 @@ print(symbols)
 
 *returns* the top symbols from a collection the number of top symbols depends on how man yspecified for input
 
+#contributors
+
+you might ask the difference between, smappy and smappdragon. smappy is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, smappy is just a set of filters.
+
+methods on smappdragon are lower level and more general. whereas methods on smappy would be specific and rigid. so for example on smappdragon, you could [get all the entities](https://github.com/SMAPPNYU/smappdragon#top_entities), on smappy you would have to ask for hashtags, mentions, etc. (which are all entities).
+
+another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
 
 #author
 
