@@ -100,6 +100,15 @@ class SmappCollection(object):
         self.collection.set_limit(limit)
         return self
 
+    def dump_to_bson(self, output_file):
+        self.collection.dump_to_bson(output_file)
+
+    def dump_to_json(self, output_file):
+        self.collection.dump_to_json(output_file)
+
+    def dump_to_csv(self, output_file):
+        self.collection.dump_to_json(output_file)
+
     def get_top_hashtags(self, num_top):
         return self.collection.top_entities({'hashtags':num_top})
 
