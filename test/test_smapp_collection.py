@@ -97,6 +97,42 @@ class TestBaseCollection(unittest.TestCase):
     	count = len([tweet for tweet in collection.get_non_geo_enabled()])
     	self.assertEqual(1186, count)
 
+    def test_dump_to_bson(self):
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson')
+
+        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.bson'
+        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection.dump_to_bson(output_path)
+        self.assertTrue(os.path.getsize(output_path) > 0)
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson')
+
+    def test_dump_to_json(self):
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+
+        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.bson.json'
+        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection.dump_to_json(output_path)
+        self.assertTrue(os.path.getsize(output_path) > 0)
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+
+    def test_dump_to_csv(self):
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv')
+
+        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.csv'
+        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
+        self.assertTrue(os.path.getsize(output_path) > 0)
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv')
+
     def test_get_top_hashtags(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
