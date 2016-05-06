@@ -41,14 +41,14 @@ this is the smapp_collection class, an abstraction of smappdragon collections.
 
 abstract:
 ```python
-from smappy import SmappCollection
+from pysmap import SmappCollection
 
 collection = SmappCollection(DATA_TYPE, OTHER_INPUTS)
 ```
 
 practical:
 ```python
-from smappy import SmappCollection
+from pysmap import SmappCollection
 
 collection = SmappCollection('bson', '/path/to/my/bson/file.bson')
 # or
@@ -343,11 +343,11 @@ print(symbols)
 
 #contributors
 
-you might ask the difference between, smappy and smappdragon. smappy is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, smappy is just a set of filters.
+you might ask the difference between, pysmap and smappdragon. pysmap is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, pysmap is just a set of filters.
 
-methods on smappdragon are lower level and more general. whereas methods on smappy would be specific and rigid. so for example on smappdragon, you could [get all the entities](https://github.com/SMAPPNYU/smappdragon#top_entities), on smappy you would have to ask for hashtags, mentions, etc. (which are all entities).
+methods on smappdragon are lower level and more general. whereas methods on pysmap would be specific and rigid. so for example on smappdragon, you could [get all the entities](https://github.com/SMAPPNYU/smappdragon#top_entities), on pysmap you would have to ask for hashtags, mentions, etc. (which are all entities).
 
-another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not smappy.
+another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not pysmap.
 
 #author
 
