@@ -27,9 +27,6 @@
         - [get_top_mentions](#get_top_mentions)
         - [get_top_media](#get_top_media)
         - [get_top_symbols](#get_top_symbols)
-- [ntwrk](#ntwrk)
-	- []()
-
 
 #twitterutil
 
