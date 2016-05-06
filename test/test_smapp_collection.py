@@ -102,7 +102,7 @@ class TestBaseCollection(unittest.TestCase):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson')
 
         output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.bson'
-        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection = SmappCollection('bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
         collection.dump_to_bson(output_path)
         self.assertTrue(os.path.getsize(output_path) > 0)
 
@@ -113,8 +113,8 @@ class TestBaseCollection(unittest.TestCase):
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
 
-        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.bson.json'
-        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        output_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output.bson.json')
+        collection = SmappCollection('bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
         collection.dump_to_json(output_path)
         self.assertTrue(os.path.getsize(output_path) > 0)
 
@@ -126,7 +126,7 @@ class TestBaseCollection(unittest.TestCase):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv')
 
         output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.csv'
-        collection = BsonCollection(os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection = SmappCollection('bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
         collection.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
         self.assertTrue(os.path.getsize(output_path) > 0)
 

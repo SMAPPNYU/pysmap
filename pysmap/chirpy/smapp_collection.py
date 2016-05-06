@@ -106,8 +106,8 @@ class SmappCollection(object):
     def dump_to_json(self, output_file):
         self.collection.dump_to_json(output_file)
 
-    def dump_to_csv(self, output_file):
-        self.collection.dump_to_json(output_file)
+    def dump_to_csv(self, output_file, keep_fields):
+        self.collection.dump_to_csv(output_file, keep_fields)
 
     def get_top_hashtags(self, num_top):
         return self.collection.top_entities({'hashtags':num_top})
