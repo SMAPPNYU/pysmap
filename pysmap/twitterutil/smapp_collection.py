@@ -1,6 +1,7 @@
 import abc
-import datetime
 import smappdragon
+
+from datetime import datetime
 
 class SmappCollection(object):
     __metaclass__ = abc.ABCMeta
@@ -49,10 +50,10 @@ class SmappCollection(object):
         return self
 
     def get_date_range(self, start, end):
-        if type(start) is not datetime.datetime or type(end) is not datetime.datetime:
+        if type(start) is not datetime or type(end) is not datetime:
             raise ValueError('inputs to date_range must be python datetime.date objects')
         def tweet_is_in_date_range(tweet):
-            return tweet['timestamp'] >= start and tweet['timestamp'] < end
+            return datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') >= start and datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') < end
         self.collection.set_custom_filter(tweet_is_in_date_range)
         return self
 
