@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(name='pysmap',
 	packages=['pysmap', 'pysmap.twitterutil', 'pysmap.ntwrk', 'pysmap.viz'],
-	version='0.0.4',
+	version='0.0.5',
 	description='pysmap is a set of tools for working with twitter data',
 	author='yvan',
 	author_email='yns207@nyu.edu',
