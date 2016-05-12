@@ -13,6 +13,7 @@
     - [smapp_collection](#smapp_collection)
         - [get_tweets_containing](#get_tweets_containing)
         - [count_tweet_terms](#count_tweet_terms)
+        - [count_top_terms](#count_top_terms)
         - [get_tweet_texts](#get_tweet_texts)
         - [get_date_range](#get_date_range)
         - [tweet_language_is](#tweet_language_is)
