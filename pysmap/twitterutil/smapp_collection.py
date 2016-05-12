@@ -1,6 +1,7 @@
 import abc
-import datetime
 import smappdragon
+
+from datetime import datetime
 
 class SmappCollection(object):
     __metaclass__ = abc.ABCMeta
@@ -8,7 +9,6 @@ class SmappCollection(object):
     @abc.abstractmethod
     def __init__(self, data_source_type, *args):
             # non mongo collection
-            
             if data_source_type == 'bson':
                 self.collection = smappdragon.BsonCollection(args[0])
             elif data_source_type == 'json':
@@ -37,22 +37,22 @@ class SmappCollection(object):
         for tweet in self.collection.get_iterator():
             yield tweet['text']
 
-    def count_tweet_terms(self, term):
-        def tweet_contains_term(tweet):
-            return term in tweet['text']
-        return sum(1 for tweet in self.collection.set_custom_filter(tweet_contains_term).get_iterator())
+    def count_tweet_terms(self, *args):
+        def tweet_contains_terms(tweet):
+            return any([term in tweet['text'] for term in args])
+        return sum(1 for tweet in self.collection.set_custom_filter(tweet_contains_terms).get_iterator())
 
-    def get_tweets_containing(self, term):
-        def tweet_contains_term(tweet):
-            return term in tweet['text']
-        self.collection.set_custom_filter(tweet_contains_term)
+    def get_tweets_containing(self, *args):
+        def tweet_contains_terms(tweet):
+            return any([term in tweet['text'] for term in args])
+        self.collection.set_custom_filter(tweet_contains_terms)
         return self
 
     def get_date_range(self, start, end):
-        if type(start) is not datetime.date or type(end) is not datetime.date:
+        if type(start) is not datetime or type(end) is not datetime:
             raise ValueError('inputs to date_range must be python datetime.date objects')
         def tweet_is_in_date_range(tweet):
-            return tweet['timestamp'] >= start and tweet['timestamp'] < end
+            return datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') >= start and datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') < end
         self.collection.set_custom_filter(tweet_is_in_date_range)
         return self
 
