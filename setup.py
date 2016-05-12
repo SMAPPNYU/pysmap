@@ -11,6 +11,7 @@ setup(name='pysmap',
 	keywords='twitter data tools pysmap',
 	license='MIT',
 	install_requires=[
-	  'smappdragon>=0.0.21'
+	  'smappdragon>=0.0.21',
+	  'stop-words>=2015.2.23.1'
 	]
 )

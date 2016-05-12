@@ -123,6 +123,9 @@ class SmappCollection(object):
 
     def get_top_symbols(self, num_top):
         return self.collection.top_entities({'symbols':num_top})
+
+    def get_top_terms(self, num_top):
+        pass
 '''
 author @yvan
 for a lower level set of tools see: https://github.com/SMAPPNYU/smappdragon

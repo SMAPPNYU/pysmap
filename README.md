@@ -93,19 +93,41 @@ collection.get_tweets_containing('cats')
 
 #count_tweet_terms
 
+counts the number of tweets that contain all these terms
 
 abstract:
 ```python
-collection.count_tweet_terms(TERM)
+collection.count_tweet_terms(TERM_1, TERM_2, ETC)
 ```
 
 practical:
 ```python
-count = collection.count_tweet_terms('cats')
+count = collection.count_tweet_terms('cats', 'dogs')
 print(count)
 ```
 
-*returns* a count of all the terms that match the specified term
+*returns* an integer value that counts all the tweets containing the terms
+
+#get_top_terms
+
+counts thet top words in a collection, [english stop words](https://github.com/Alir3z4/stop-words/blob/25c6a0aea665871e887f155b883e950c3743ce50/english.txt) are automatically included, otherwise you can specify your own set of stopwords with python stop-wrods. the stopwords are words taht get ignored and dwill not return in the final counts
+
+abstract:
+```python
+collection.count_tweet_terms(MUMBER_OF_TERMS, LIST_OF_STOP_WORDS)
+```
+
+practical:
+```python
+count = collection.count_tweet_terms(5)
+#or
+count = collection.count_tweet_terms(5, ['blah', 'it', 'cat'])
+print(count)
+```
+
+*note* `LIST_OF_STOP_WORDS` is optional, it is set to englis hby default
+
+*returns* a dictionary that har all the top_X terms 
 
 #get_tweet_texts
 
@@ -123,7 +145,7 @@ for text in collection.get_tweet_texts():
     print(text)
 ```
 
-*returns*
+*returns* an iterator that returns just the text of each tweet
 
 #get_date_range
 
