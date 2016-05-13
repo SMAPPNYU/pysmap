@@ -128,7 +128,7 @@ print(count)
 
 *note* `LIST_OF_STOP_WORDS` is optional, it is set to englis hby default
 
-*returns* a dictionary that har all the top_X terms 
+*returns* a dictionary that has all the top_X terms 
 
 #get_tweet_texts
 
