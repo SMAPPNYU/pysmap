@@ -17,6 +17,7 @@
         - [get_date_range](#get_date_range)
         - [get_geo_enabled](#get_geo_enabled)
         - [get_non_geo_enabled](#get_non_geo_enabled)
+        - [get_top_entities](#get_top_entities)
         - [get_top_hashtags](#get_top_hashtags)
         - [get_top_urls](#get_top_urls)
         - [get_top_mentions](#get_top_mentions)
@@ -282,6 +283,73 @@ collection.limit_number_of_tweets(145)
 ```
 
 *returns* a collection that is limited on terms of the number of tweets it can output
+
+#get_top_entities
+
+returns the top twitter entites from a tweet object, you can [read about twitter entities here](https://dev.twitter.com/overview/api/entities-in-twitter-objects)
+
+abstract:
+```python
+collection.top_entities({'ENTITY_FIELD':NUMBER_OF_TOP_TERMS, 'ENTITY_FIELD':NUMBER_OF_TOP_TERMS, 'ENTITY_FIELD':NUMBER_OF_TOP_TERMS})
+```
+
+practical:
+```python
+collection.top_entities({'user_mentions':5, 'media':3, 'hashtags':5, 'urls':0, 'user_mentions':2, 'symbols':2})
+# or
+collection.top_entities({'hashtags':5})
+```
+
+*returns* a dictionary containing tho requested entities and the counts for each entity
+
+input:
+```python
+print collection.top_entities({'user_mentions':5, 'media':3, 'hashtags':5})
+```
+
+output:
+```
+{
+        "hashtags": {
+                "JadeHelm": 118, 
+                "pjnet": 26, 
+                "jadehelm": 111, 
+                "falseflag": 32, 
+                "2a": 26
+        },
+        "user_mentions": {
+                "1619936671": 41, 
+                "27234909": 56, 
+                "733417892": 121, 
+                "10228272": 75, 
+                "233498836": 58
+        }, 
+        "media": {
+                "https://t.co/ORaTXOM2oX": 55, 
+                "https://t.co/pAfigDPcNc": 27, 
+                "https://t.co/TH8TmGuYww": 24
+        }
+}
+```
+
+*returns* a dictionary filled with the top terms you requested
+
+note: passing 0 to a field like `'hashtags':0` returns all the hashtags
+
+note: no support for extended entities, retweet entities, user entites, or direct message entities.
+
+note: if not enough entity objects are returned they get filled into the dictionary with null like so:
+
+```
+{
+    "symbols": {
+            "0": null, 
+            "1": null, 
+            "hould": 1
+    }
+}
+```
+
 
 #get_top_hashtags
 

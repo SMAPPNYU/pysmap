@@ -191,5 +191,32 @@ class TestBaseCollection(unittest.TestCase):
         base_top_counts = {'Jade': 538, 'Duty:': 146, 'Ops': 265, 'Sevenfold': 216, 'III': 173, 'RT': 524, 'Black': 235, 'Helm': 415, 'Avenged': 220, '-': 193}
         self.assertTrue(set(top_counts.keys()) == set(base_top_counts.keys()))
 
+    def test_base_top_entities_returns_dict(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        returndict = collection.get_top_entities({'hashtags':5})
+        self.assertTrue(isinstance(returndict, dict))
+
+    def test_base_top_entities_returns_hashtags(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        returndict = collection.get_top_entities({'hashtags':5})
+        self.assertTrue('hashtags' in returndict)
+
+    def test_base_top_entities_returns_hashtags_and_media(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        returndict = collection.get_top_entities({'user_mentions':5, 'media':3})
+        self.assertTrue('user_mentions' in returndict and 'media' in returndict)
+
+    def test_base_top_entities_returns_counts(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        returndict = collection.get_top_entities({'urls':5, 'symbols':3})
+        if len(returndict['urls']) > 0:
+            self.assertTrue(len(returndict['urls']) == 5)
+        if len(returndict['symbols']) > 0:
+            self.assertTrue(len(returndict['symbols']) == 3)
+
 if __name__ == '__main__':
     unittest.main()
