@@ -29,6 +29,11 @@
         - [tweet_language_is](#tweet_language_is)
         - [user_language_is](#user_language_is)
 
+#installation
+
+`pip install pysmap`
+
+`pip install pysmap --upgrade`
 
 #twitterutil
 
