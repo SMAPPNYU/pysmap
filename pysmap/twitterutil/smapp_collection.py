@@ -1,7 +1,9 @@
 import abc
+import operator
 import smappdragon
 
 from datetime import datetime
+from stop_words import get_stop_words
 
 class SmappCollection(object):
     __metaclass__ = abc.ABCMeta
@@ -90,9 +92,9 @@ class SmappCollection(object):
 
     def get_non_geo_enabled(self):
         def non_geo_enabled_filter(tweet):
-            return 'coordinates' not in tweet or \
-                tweet['coordinates'] is None or \
-                'coordinates' not in tweet['coordinates']
+            return ('coordinates' not in tweet or
+                tweet['coordinates'] is None or
+                'coordinates' not in tweet['coordinates'])
         self.collection.set_custom_filter(non_geo_enabled_filter)
         return self
 
@@ -124,8 +126,21 @@ class SmappCollection(object):
     def get_top_symbols(self, num_top):
         return self.collection.top_entities({'symbols':num_top})
 
-    def get_top_terms(self, num_top):
-        pass
+    def get_top_terms(self, num_top, stop_words=None):
+        term_counts = {}
+        if not stop_words:
+            stop_words = get_stop_words('en')
+        for tweet in self.collection.get_iterator():
+            split_tweet = tweet['text'].split()
+            for tweet_token in split_tweet:
+                if tweet_token not in stop_words:
+                    term_counts[tweet_token] = 0 if tweet_token not in term_counts else term_counts[tweet_token]+1
+        sorted_counts = sorted(term_counts.items(), key=operator.itemgetter(1), reverse=True)[:num_top]
+        return_counts = {}
+        for k, v in sorted_counts:
+            return_counts[k] = v
+        return return_counts
+
 '''
 author @yvan
 for a lower level set of tools see: https://github.com/SMAPPNYU/smappdragon

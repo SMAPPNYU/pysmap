@@ -184,5 +184,12 @@ class TestBaseCollection(unittest.TestCase):
     	base_top_symbols = {'symbols': {0: None, 'hould': 1, 2: None, 3: None, 1: None}}
     	self.assertTrue(set(top_symbols.keys()) == set(base_top_symbols.keys()))
 
+    def test_get_top_terms(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        top_counts = collection.get_top_terms(10)
+        base_top_counts = {'Jade': 538, 'Duty:': 146, 'Ops': 265, 'Sevenfold': 216, 'III': 173, 'RT': 524, 'Black': 235, 'Helm': 415, 'Avenged': 220, '-': 193}
+        self.assertTrue(set(top_counts.keys()) == set(base_top_counts.keys()))
+
 if __name__ == '__main__':
     unittest.main()
