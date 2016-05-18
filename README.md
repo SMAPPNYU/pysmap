@@ -32,6 +32,16 @@
 - [viz](#viz)
     - [plots](#plots)
         - [bar_graph_tweet_field_grouped_by_period](#bar_graph_tweet_field_grouped_by_period)
+        - [bar_graph_languages](#bar_graph_languages)
+        - [bar_graph_user_languages](#bar_graph_user_languages)
+        - [bar_graph_tweets](#bar_graph_tweets)
+        - [bar_graph_tweets_with_urls](#bar_graph_tweets_with_urls)
+        - [bar_graph_tweets_with_media](#bar_graph_tweets_with_media)
+        - [bar_graph_tweets_with_mentions](#bar_graph_tweets_with_mentions)
+        - [bar_graph_tweets_with_hashtags](#bar_graph_tweets_with_hashtags)
+        - [bar_graph_tweets_with_symbols](#bar_graph_tweets_with_symbols)
+        - [bar_graph_tweets_with_retweets](#bar_graph_tweets_with_retweets)
+        - [bar_graph_tweets_with_locations](#bar_graph_tweets_with_locations)
 
 #installation
 
