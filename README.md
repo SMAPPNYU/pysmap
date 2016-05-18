@@ -31,6 +31,7 @@
         - [user_language_is](#user_language_is)
 - [viz](#viz)
     - [plots](#plots)
+        - [bar_graph_tweet_field_grouped_by_period](#bar_graph_tweet_field_grouped_by_period)
 
 #installation
 
