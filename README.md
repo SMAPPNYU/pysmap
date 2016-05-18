@@ -29,6 +29,8 @@
         - [limit_number_of_tweets](#limit_number_of_tweets)
         - [tweet_language_is](#tweet_language_is)
         - [user_language_is](#user_language_is)
+- [viz](#viz)
+    - [plots](#plots)
 
 #installation
 
@@ -442,6 +444,42 @@ you might ask the difference between, pysmap and smappdragon. pysmap is easier t
 methods on smappdragon are lower level and more general. whereas methods on pysmap would be specific and rigid. so for example on smappdragon, you could [get all the entities](https://github.com/SMAPPNYU/smappdragon#top_entities), on pysmap you would have to ask for hashtags, mentions, etc. (which are all entities).
 
 another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not pysmap.
+
+#viz 
+
+a set of visualization tools, basically ways to graph and visualize a [SmappCollection](#smapp_collection)
+
+#plots
+
+a set of graph tools
+
+#bar_graph_tweet_field_grouped_by_period
+
+*NOT READY*
+
+a tool that can be used to create generalized bar graphs from a smapp collection an various tweet data.
+
+abstract:
+```python
+from pysmap import plots
+
+plots.bar_graph_tweet_field_grouped_by_period(SMAPP_COLLECTION, TWEET_FIELD, TWEET_FIELD_VALUES_TO_MATCH, CUSTOM_FILTER_FUNCTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
+```
+
+practical:
+```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
+
+def custom_filter(tweet):
+    return True
+
+plots.bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', ['en', 'fr', 'es'], custom_filter, 'weeks', datetime(2015,9,1), datetime(2015,11,30), output_path)
+```
+
+*returns* an outputted html graph file and opens the graph in default
 
 #author
 
