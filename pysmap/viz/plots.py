@@ -11,22 +11,21 @@ from smappdragon import TweetParser
   values_to_match are the values you want that field to match
   filter can be any extra filter like a custom smappdragon filter
   that can be applied to a tweet to make your graph
-  timeslice is the grouping you want, by day, by week, by month, etc
+  period_type is the grouping you want, by day, by week, by month, etc
   start and end is the total date range you want to be queried,
   later ell do multipe fields
+  output_path 
 '''
-def tweet_field_grouped_by_timeslice(collection, field, values_to_match, custom_filter, timeslice, start, end, output_path):
-  split_field = field.split('.')
-
-  if timeslice == 'hours':
+def bar_graph_tweet_field_grouped_by_period(collection, field, values_to_match, custom_filter, period_type, start, end, output_path):
+  if period_type == 'hours':
     time_delta = timedelta(hours=1)
-  elif timeslice == 'days':
+  elif period_type == 'days':
     time_delta = timedelta(days=1)
-  elif timeslice == 'weeks':
+  elif period_type == 'weeks':
     time_delta = timedelta(weeks=1)
-  elif timeslice == 'months':
+  elif period_type == 'months':
     time_delta = timedelta(weeks=4)
-  elif timeslice == 'years':
+  elif period_type == 'years':
     time_delta = timedelta(weeks=52)
 
   # calculate how many periods we need
@@ -42,9 +41,20 @@ def tweet_field_grouped_by_timeslice(collection, field, values_to_match, custom_
     for period in range(periods):
       field_counts[period] = 0
 
+  # split the input field for compound fields
+  split_field = field.split('.')
+  tweet_parser = TweetParser()
+
   for tweet in collection.get_date_range(start, end):
-    # flattened_tweet = tweet_parser.flatten_dict(tweet)
-    if ((field == '') or (tweet[field] in values_to_match)) and custom_filter(tweet):
+    flattened_tweet = tweet_parser.flatten_dict(tweet)
+    
+    for tweet_tuple in flattened_tweet:
+      if tweet_tuple[0] == split_field:
+        value = tweet_tuple[1] 
+        break
+
+    # empty fild value matches all tweets, then only custom filter can be used to count
+    if ((field == '') or (value in values_to_match)) and custom_filter(tweet):
       tweet_time = datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
       period = round((tweet_time - start) // time_delta)
       field_counts[period if period > 0 else 0] += 1
@@ -57,168 +67,64 @@ def tweet_field_grouped_by_timeslice(collection, field, values_to_match, custom_
   output_file(output_path)
   show(Bar(data, 'period', values='instances'))
 
-# import pytz
-# import numpy as np
-# import seaborn as sns
-# import matplotlib.pyplot as plt
-# from collections import OrderedDict
+def bar_graph_languages(collection, langs_to_match, period_type, start, end, output_path):
+  bar_graph_tweet_field_grouped_by_period(collection, 'lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path)
 
-# def languages_per_day(collection, start, step_size=timedelta(days=1), num_steps=31,
-#   languages=['en', 'es', 'other'], language_colors=['red', 'royalblue', 'grey'],
-#   x_label_step = 2, alpha=.65, bar_width=.8, print_progress_every=100000, show=True):
-#     # create an ordered dict
-#     # where each key is 1-31 (num_steps)
-#     # and the value of 1-31 are dicts
-#     # each of those dicts 1-31
-#     # has keys for each language, and counts.
-#     language_counts = OrderedDict()
-#     for p in range(num_steps):
-#         language_counts[p] = OrderedDict()
-#         for l in languages:
-#             language_counts[p][l] = 0
+def bar_graph_user_languages(collection, langs_to_match, period_type, start, end, output_path):
+  bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path)
 
-#     # Iterate over time period, querying for tweets and storing counts
-#     # for each step
-#     for step in range(num_steps):
-#         # start our query 
-#         query_start = start + (step * step_size)
-#         print "{0}: {1} - {2}".format(step, query_start, query_start + step_size)
+def bar_graph_tweets(collection, period_type, start, end, output_path):
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], lambda tweet:True, period_type, start, end, output_path)
 
-#         # tweets = collection.find({"timestamp": {"$gte": query_start, "$lt": query_start + step_size}})
-#         tweets = collection.since(query_start).until(query_start+step_size)
-#         total = tweets.count()
+def bar_graph_tweets_with_urls(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if len(tweet['entities']['urls']) > 0:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-#         counter = 0
-#         for tweet in tweets:
-#             if counter % print_progress_every == 0:
-#                 print "\t{0} of {1}".format(counter, total)
-#             counter += 1
+def bar_graph_tweets_with_media(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if len(tweet['entities']['media']) > 0:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-#             if "lang" not in tweet:
-#                 tweet["lang"] = "unk"
-#             if tweet["lang"] in languages:
-#                 language_counts[step][tweet["lang"]] += 1
-#             else:
-#                 language_counts[step]["other"] += 1
+def bar_graph_tweets_with_mentions(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if len(tweet['entities']['user_mentions']) > 0:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-#         count_total = 0
-#         for l in languages:
-#             count_total += language_counts[step][l]
-#         assert count_total == total, "Error: Tweet by-language count does not match query total"
-#         print "\tQuery total: {0}, Count total: {1}".format(total, count_total)
-#         print "\t{0}".format(language_counts[step])
+def bar_graph_tweets_with_hashtags(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if len(tweet['entities']['hashtags']) > 0:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-#     # Plot tweets in bars by language (in order of languages list)
-#     bars = OrderedDict()
-#     bars[languages[0]] = plt.bar(range(num_steps),
-#                                  [language_counts[i][languages[0]] for i in range(num_steps)],
-#                                  width=bar_width,
-#                                  linewidth=0.0,
-#                                  color=language_colors[0],
-#                                  alpha=alpha,
-#                                  label=languages[0])
+def bar_graph_tweets_with_symbols(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if len(tweet['entities']['symbols']) > 0:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-#     for l in languages[1:]:
-#         bars[l] = plt.bar(range(num_steps),
-#                           [language_counts[i][l] for i in range(num_steps)],
-#                           width=bar_width,
-#                           linewidth=0.0,
-#                           color=language_colors[languages.index(l)],
-#                           alpha=alpha,
-#                           bottom=[c.get_y() + c.get_height() for c in bars[languages[languages.index(l)-1]].get_children()],
-#                           label=l)
-#     plt.xlim(0, num_steps)
-#     plt.tick_params(axis="x", which="both", bottom="on", top="off", length=8, width=1, color="#999999")
-#     # plt.xlabel(x_label)
-#     plt.ylabel("# Tweets (by language)")
-#     # plt.title(plot_title)
-#     plt.legend(fontsize=14, loc=0)
-#     plt.xticks(range(num_steps)[::x_label_step],
-#                ["{0}-{1}-{2}".format(d.year, d.month, d.day) for d in [start + (i * step_size) for i in range(num_steps)][::x_label_step]],
-#                rotation=55)
-#     if show:
-#         plt.show()
+def bar_graph_tweets_with_retweets(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if 'retweeted_status' in tweet:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
 
-# def tweets_per_day_with_annotations(collection, start, num_steps, step_size=timedelta(days=1),
-#     alpha=.4, line_width=2.0, line_color="red", x_label_step=10, events=[], show=True):
-#     """
-#     Script to plot tweets per day with vertical annotation lines
-#     """
-#     # Get tweets per day
-#     tweets_per_day = []
-#     for step in range(num_steps):
-#         query_start = start + (step * step_size)
-#         tweets = collection.since(query_start).until(query_start+step_size)
-#         total = tweets.count()
-#         tweets_per_day.append(total)
-#         print "{0}: {1} - {2}: {3}".format(step, query_start, query_start + step_size, total)
-
-#     # Plot
-#     plt.plot(range(num_steps), tweets_per_day, alpha=alpha, linewidth=line_width, color=line_color)
-
-#     ymin, ymax = plt.ylim()
-#     for e in events:
-#         plt.axvline(e[0], linestyle="--", color="#999999")
-#         if e[2] == "bottom":
-#             plt.text(e[0] + 0.2, ymin + (0.05 * ymax), e[1], rotation=-90, verticalalignment="bottom")
-#         else:
-#             plt.text(e[0] + 0.2, ymax - (0.05 * ymax), e[1], rotation=-90, verticalalignment="top")
-
-#     plt.xlim(0, num_steps-1)
-#     plt.ylabel("# Tweets")
-#     plt.tick_params(axis="x", which="both", bottom="on", top="off", length=8, width=1, color="#999999")
-#     plt.xticks(range(num_steps)[::x_label_step],
-#                ["{0}-{1}-{2}".format(d.year, d.month, d.day) for d in [start + (i * step_size) for i in range(num_steps)[::x_label_step]]],
-#                rotation=55)
-#     if show:
-#         plt.show()
-# '''
-#   Plot a barchart (tweets per timeunit)
-# '''
-# def tweets_over_time(collection, start, step_size=timedelta(days=1), num_steps=31, alpha=.7, bar_width=.8, x_label_step=7,
-#     xtick_format=None, show=True):
-
-#     x_label = "Time"
-#     y_label = "Tweets"
-
-#     times = [start + (i * step_size) for i in range(num_steps)]
-#     counts = []
-#     for step in times:
-#         tweets = collection.since(step).until(step + step_size)
-#         counts.append(tweets.count())
-
-#     sns.set_style("darkgrid")
-#     sns.set_palette("husl")
-
-#     bars = plt.bar(range(num_steps),
-#                    counts,
-#                    width=bar_width,
-#                    linewidth=0.0,
-#                    alpha=alpha,
-#                    align="edge")
-
-#     plt.xlim(0, num_steps)
-#     plt.tick_params(axis="x", which="both", bottom="on", top="off", length=8, width=1, color="#999999")
-#     plt.xlabel(x_label)
-#     plt.ylabel(y_label)
-
-#     if not xtick_format:
-#         if step_size.total_seconds() < 60*60:
-#             xtick_format = '%H:%M'
-#         elif step_size.total_seconds() < 60*60*24:
-#             xtick_format = '%m-%d %H:%M'
-#         else:
-#             xtick_format = '%Y-%m-%d'
-
-#     plt.xticks(range(num_steps)[::x_label_step],
-#                [t.strftime(xtick_format) for t in times[::x_label_step]],
-#                rotation=90)
-
-#     plt.tight_layout()
-#     if show:
-#         plt.show()
-#     return times,counts
-
+def bar_graph_tweets_with_locations(collection, period_type, start, end, output_path):
+  def custom_filter(tweet):
+    if 'retweeted_status' in tweet:
+      return True
+    return False
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  
 # '''
 #   If `names` is set, use those. Otherwise, use top `n_names` names.
 # '''
@@ -437,30 +343,6 @@ def tweet_field_grouped_by_timeslice(collection, field, values_to_match, custom_
 
 #     if show:
 #         plt.show()
-
-# def tweets_with_urls(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='url', labels=['Tweets with URLs', 'Tweets without URLs'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
-
-# def tweets_with_images(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='image', labels=['Tweets with images', 'Tweets without images'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
-
-# def tweets_with_mentions(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='mention', labels=['Tweets with mentions', 'Tweets without mentions'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
-
-# def tweets_with_hashtags(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='hashtag', labels=['Tweets with hashtags', 'Tweets without hashtags'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
-
-# def tweets_retweets(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='retweet', labels=['RTs', 'Non-RTs'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
-
-# def geocoded_tweets(collection, group_by='days', xtick_format='%Y-%m-%d', alpha=.65, bar_width=.8, show=True):
-#     _entity_stacked_bar_plot(collection, group_by=group_by, column='geo_enabled', labels=['Geocoded tweets', 'Non-geocoded tweets'],
-#         xtick_format=xtick_format, alpha=alpha, bar_width=bar_width, show=show)
 
 # '''
 #   Makes a stacked bars plot from data in a pandas.DataFrame.
