@@ -494,123 +494,188 @@ plots.bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', ['en', 'f
 
 #bar_graph_languages
 
+make a bar graph of the number of tweets containing the specified languages
+
 abstract:
 ```python
+from pysmap import plots
+
+plots.bar_graph_languages(collection, langs_to_match, period_type, start, end, output_path)
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
+
+plots.bar_graph_languages(collection, ['en', 'fr', 'es'], 'days', datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_user_languages
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_urls
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_media
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_mentions
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_hashtags
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_symbols
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_retweets
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_locations
 
 abstract:
 ```python
+from pysmap import plots
+
 ```
 
 practical:
 ```python
+from pysmap import SmappCollection, plots
+
+collection = SmappCollection('json', 'docs/tweet_collection.json')
+output_path = 'doc/output_graph.html'
 ```
 
-*returns*
+*returns* an html graph file and opens the graph in the default browser of the user
 
 
 #author
