@@ -58,15 +58,21 @@ class SmappCollection(object):
         self.collection.set_custom_filter(tweet_is_in_date_range)
         return self
 
-    def tweet_language_is(self, language_code):
+    def tweet_language_is(self, *args):
         def language_in_tweet(tweet):
-            return language_code in tweet['lang']
+            return  any([language_code in tweet['lang'] for language_code in args])
         self.collection.set_custom_filter(language_in_tweet)
         return self
 
-    def user_language_is(self, language_code):
+    def detect_tweet_language(self, *args):
         def language_in_tweet(tweet):
-            return language_code in tweet['user']['lang']
+            return  any([language_code in tweet['lang'] for language_code in args])
+        self.collection.set_custom_filter(language_in_tweet)
+        return self
+
+    def user_language_is(self, *args):
+        def language_in_tweet(tweet):
+            return any([language_code in tweet['user']['lang'] for language_code in args])
         self.collection.set_custom_filter(language_in_tweet)
         return self
 

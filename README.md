@@ -28,6 +28,7 @@
         - [tweets_with_user_location](#tweets_with_user_location)
         - [limit_number_of_tweets](#limit_number_of_tweets)
         - [tweet_language_is](#tweet_language_is)
+        - [detect_tweet_language](#detect_tweet_language)
         - [user_language_is](#user_language_is)
 - [viz](#viz)
     - [plots](#plots)
