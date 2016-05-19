@@ -187,20 +187,38 @@ collection.get_date_range(datetime(2014,1,30), datetime(2014,4,30))
 
 #tweet_language_is
 
-only returns tweets where the language is the specified one
+only returns tweets where the language is the specified one (differs from [detect_tweet_language](#detect_tweet_language)  just checks the field on the tweet object reported by twitter, does not detect)
 
 abstract:
 ```python
-collection.tweet_language_is(LANGUAGE_CODE)
+collection.tweet_language_is(LANGUAGE_CODES)
+```
+
+practical:
+```python
+#get tweets in english and french
+collection.tweet_language_is(['en', 'fr'])
+```
+
+*returns* a collection where all the tweets have their text language as the specified language
+
+#detect_tweet_language
+
+a filter that filters tweets based on language detetction. (differs from [tweet_language_is](#tweet_language_is) because it actually detects the language, tweet_language_is just checks the field on the tweet object reported by twitter)
+
+abstract:
+```python
+collection.detect_tweet_language(LANGUAGE_CODES)
 ```
 
 practical:
 ```python
 #get tweets in english
-collection.tweet_language_is('en')
+collection.detect_tweet_language('en')
 ```
 
 *returns* a collection where all the tweets have their text language as the specified language
+
 
 #user_language_is
 

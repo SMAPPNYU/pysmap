@@ -8,4 +8,5 @@ dependencies:
 - pytz=2016.4
 - pip:
   - smappdragon>=0.0.21
+  - langdetect>=1.0.6
   

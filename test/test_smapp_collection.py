@@ -83,6 +83,12 @@ class TestSmappCollection(unittest.TestCase):
     	count = len([tweet for tweet in collection.tweet_language_is('en')])
     	self.assertEqual(825, count)
 
+    def test_detect_tweet_language(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        count = len([tweet for tweet in collection.detect_tweet_language('en')])
+        self.assertEqual(910, count)
+
     def test_user_language_is(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
