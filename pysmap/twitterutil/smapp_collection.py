@@ -3,7 +3,7 @@ import operator
 import smappdragon
 
 from datetime import datetime
-from langdetect import detect, lang_detect_exception
+from langdetect import detect, lang_detect_exception, DetectorFactory
 from stop_words import get_stop_words
 
 class SmappCollection(object):
@@ -66,6 +66,7 @@ class SmappCollection(object):
         return self
 
     def detect_tweet_language(self, *args):
+        DetectorFactory.seed = 0
         def language_in_tweet(tweet):
             detected_lang = None
             try: 
