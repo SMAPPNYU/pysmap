@@ -5,7 +5,7 @@ from datetime import datetime
 from test.config import config
 from pysmap import SmappCollection
 
-class TestBaseCollection(unittest.TestCase):
+class TestSmappCollection(unittest.TestCase):
 
     def test_control(self):
         self.assertTrue(True)
