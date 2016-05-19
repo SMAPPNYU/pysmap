@@ -466,15 +466,11 @@ a set of graph tools
 
 #bar_graph_tweet_field_grouped_by_period
 
-*NOT READY*
-
 a tool that can be used to create generalized bar graphs from a smapp collection an various tweet data.
 
 abstract:
 ```python
-from pysmap import plots
-
-plots.bar_graph_tweet_field_grouped_by_period(SMAPP_COLLECTION, TWEET_FIELD, TWEET_FIELD_VALUES_TO_MATCH, CUSTOM_FILTER_FUNCTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
+bar_graph_tweet_field_grouped_by_period(SMAPP_COLLECTION, TWEET_FIELD, TWEET_FIELD_VALUES_TO_MATCH, CUSTOM_FILTER_FUNCTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -498,9 +494,7 @@ make a bar graph of the number of tweets containing the specified languages
 
 abstract:
 ```python
-from pysmap import plots
-
-plots.bar_graph_languages(collection, langs_to_match, period_type, start, end, output_path)
+bar_graph_languages(SMAPP_COLLECTION, LANGUAGES_TO_MATCH, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -517,10 +511,11 @@ plots.bar_graph_languages(collection, ['en', 'fr', 'es'], 'days', datetime(2015,
 
 #bar_graph_user_languages
 
+graph all the tweets where the users who made the tweets have one of the specified languages
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_user_languages(SMAPP_COLLECTION, LANGUAGES_TO_MATCH, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -529,16 +524,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_user_languages(collection, ['en', 'fr', 'es'], 'days', datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets
 
+graph all tweets per time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -547,16 +545,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+bar_graph_tweets(collection, period_type, start, end, output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_urls
 
+graph all tweets that contain urls by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_urls(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -565,16 +566,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_urls(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_media
 
+graph all tweets that contain media (like images) by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_media(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -583,16 +587,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_media(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_mentions
 
+graph all tweets that contain user mentions by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_mentions(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -601,16 +608,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_mentions(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_hashtags
 
+graph all tweets that contain hashtags by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_hashtags(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -619,16 +629,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_hashtags(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_symbols
 
+graph all tweets that contain symbols (like stock tickers, $AAPL, $GOOG, $TWTR) by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_symbols(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -637,16 +650,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_symbols(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
 #bar_graph_tweets_with_retweets
 
+graph all tweets that are retweets by time period
+
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_retweets(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -655,16 +671,19 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_retweets(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_locations
+#bar_graph_tweets_with_location
+
+graph all tweets that have a location field attached to them
 
 abstract:
 ```python
-from pysmap import plots
-
+bar_graph_tweets_with_location(SMAPP_COLLECTION, SLICE_PERIOD, START_DATE, END_DATE, OUTPUT_FILE_PATH)
 ```
 
 practical:
@@ -673,6 +692,8 @@ from pysmap import SmappCollection, plots
 
 collection = SmappCollection('json', 'docs/tweet_collection.json')
 output_path = 'doc/output_graph.html'
+
+plots.bar_graph_tweets_with_location(collection, 'hours',  datetime(2015,9,1), datetime(2015,11,30), output_path)
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
