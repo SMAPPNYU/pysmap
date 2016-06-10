@@ -40,6 +40,9 @@ class SmappCollection(object):
         for tweet in self.collection.get_iterator():
             yield tweet['text']
 
+    def count_tweets(self):
+        return sum(1 for tweet in self.collection.get_iterator())
+
     def count_tweet_terms(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])

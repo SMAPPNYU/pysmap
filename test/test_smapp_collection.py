@@ -59,6 +59,12 @@ class TestSmappCollection(unittest.TestCase):
         count = collection.count_tweet_terms('jade', 'helm')
         self.assertEqual(176, count)
 
+    def test_count_tweets(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        count = collection.count_tweets()
+        self.assertEqual(1187, count)
+
     def test_get_tweets_containing(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
