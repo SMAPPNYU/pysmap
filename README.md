@@ -24,6 +24,7 @@
         - [get_top_media](#get_top_media)
         - [get_top_symbols](#get_top_symbols)
         - [count_tweet_terms](#count_tweet_terms)
+        - [count_tweets](#count_tweets)
         - [exclude_retweets](#exclude_retweets)
         - [tweets_with_user_location](#tweets_with_user_location)
         - [limit_number_of_tweets](#limit_number_of_tweets)
@@ -128,6 +129,23 @@ print(count)
 ```
 
 *returns* an integer value that counts all the tweets containing the terms
+
+#count_tweets
+
+counts the number of tweets in a collection
+
+abstract:
+```python
+collection.count_tweets()
+```
+
+practical:
+```python
+count = collection.count_tweets()
+print(count)
+```
+
+*returns* an integer value that counts all the tweets in a collection
 
 #get_top_terms
 
