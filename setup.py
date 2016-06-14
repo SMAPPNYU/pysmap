@@ -13,6 +13,9 @@ setup(name='pysmap',
 	install_requires=[
 	  'smappdragon>=0.0.21',
 	  'stop-words>=2015.2.23.1',
-	  'langdetect>=1.0.6'
+	  'langdetect>=1.0.6',
+	  'bokeh>=0.11.1',
+	  'pandas>=0.18.1',
+	  'pytz>=2016.4'
 	]
 )

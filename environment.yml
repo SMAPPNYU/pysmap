@@ -9,4 +9,5 @@ dependencies:
 - pip:
   - smappdragon>=0.0.21
   - langdetect>=1.0.6
+  - stop-words>=2015.2.23.1
   
