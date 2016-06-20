@@ -31,6 +31,7 @@
         - [tweet_language_is](#tweet_language_is)
         - [detect_tweet_language](#detect_tweet_language)
         - [user_language_is](#user_language_is)
+        - [sample](#sample)
 - [viz](#viz)
     - [plots](#plots)
         - [bar_graph_tweet_field_grouped_by_period](#bar_graph_tweet_field_grouped_by_period)
@@ -330,9 +331,29 @@ collection.limit_number_of_tweets(LIMIT_NUMEBER)
 practical:
 ```python
 collection.limit_number_of_tweets(145)
+
+for tweet in collection.limit_number_of_tweets(145):
+    print(tweet)
 ```
 
 *returns* a collection that is limited on terms of the number of tweets it can output
+
+#sample
+
+abstract:
+```python
+collection.sample(NUMBER_OF_TWEETS_TO_SAMPLE)
+```
+
+practical:
+```python
+collection.sample(10)
+
+for tweet in collection.sample(10):
+    print(tweet)
+```
+
+*returns* a 
 
 #get_top_entities
 
@@ -399,7 +420,6 @@ note: if not enough entity objects are returned they get filled into the diction
     }
 }
 ```
-
 
 #get_top_hashtags
 

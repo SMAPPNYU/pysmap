@@ -230,5 +230,19 @@ class TestSmappCollection(unittest.TestCase):
         if len(returndict['symbols']) > 0:
             self.assertTrue(len(returndict['symbols']) == 3)
 
+    def test_sample_returns_right_number_of_items(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        sample_collection = collection.sample(10)
+        self.assertEqual(10, len(list(sample_collection)))
+
+    def test_sample_returns_dif_tweets_than_fist_10_tweets(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection_one = SmappCollection('bson', file_path)
+        sample_tweets = list(collection_one.sample(10))
+        collection_two = SmappCollection('bson', file_path)
+        first_ten_tweets = list(collection_two.limit_number_of_tweets(10))
+        self.assertNotEqual(sample_tweets, first_ten_tweets)
+
 if __name__ == '__main__':
     unittest.main()

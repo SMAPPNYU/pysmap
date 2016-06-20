@@ -1,5 +1,7 @@
 import abc
+import random
 import operator
+import itertools
 import smappdragon
 
 from datetime import datetime
@@ -200,6 +202,16 @@ class SmappCollection(object):
             return_counts[k] = v
         return return_counts
 
+    def sample(self, k):
+        it = iter(self.collection.get_iterator())
+        sample = list(itertools.islice(it, k))
+        random.shuffle(sample)
+        for i, item in enumerate(it, start=k+1):
+            j = random.randrange(i)
+            if j < k:
+                sample[j] = item
+        for sample_value in sample:
+            yield sample_value
 '''
 author @yvan
 for a lower level set of tools see: https://github.com/SMAPPNYU/smappdragon
