@@ -340,6 +340,8 @@ for tweet in collection.limit_number_of_tweets(145):
 
 #sample
 
+gets a sample of tweets from a collection
+
 abstract:
 ```python
 collection.sample(NUMBER_OF_TWEETS_TO_SAMPLE)
