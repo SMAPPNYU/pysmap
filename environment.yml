@@ -7,7 +7,7 @@ dependencies:
 - pandas=0.18.1
 - pytz=2016.4
 - pip:
-  - smappdragon>=0.0.21
+  - smappdragon
   - langdetect>=1.0.6
   - stop-words>=2015.2.23.1
   
