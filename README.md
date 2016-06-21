@@ -355,7 +355,7 @@ for tweet in collection.sample(10):
     print(tweet)
 ```
 
-*returns* a sample of the number of tweets you want to sample
+*returns* a collection that only returns a sample of tweets as big as the number of tweets you specified
 
 #get_top_entities
 
