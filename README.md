@@ -357,6 +357,8 @@ for tweet in collection.sample(10):
 
 *returns* a collection that only returns a sample of tweets as big as the number of tweets you specified
 
+note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) 
+
 #get_top_entities
 
 returns the top twitter entites from a tweet object, you can [read about twitter entities here](https://dev.twitter.com/overview/api/entities-in-twitter-objects)
