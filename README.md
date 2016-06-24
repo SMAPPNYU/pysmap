@@ -357,7 +357,7 @@ for tweet in collection.sample(10):
 
 *returns* a collection that only returns a sample of tweets as big as the number of tweets you specified
 
-note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling).
+note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling)
 
 #get_top_entities
 
