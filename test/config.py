@@ -5,7 +5,7 @@ config = \
             'port': 49999, \
             'user': 'smapp_readOnly_Db', \
             'password': 'winter!is*coming^ppams', \
-            'database': 'JebCanFixIt', \
+            'database': '47Traitors', \
             'collection': 'tweets_1' \
     }, \
     'bson':{ \

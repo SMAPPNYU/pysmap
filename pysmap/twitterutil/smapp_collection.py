@@ -9,9 +9,6 @@ from langdetect import detect, lang_detect_exception, DetectorFactory
 from stop_words import get_stop_words
 
 class SmappCollection(object):
-    __metaclass__ = abc.ABCMeta
-
-    @abc.abstractmethod
     def __init__(self, data_source_type, *args):
             # non mongo collection
             if data_source_type == 'bson':

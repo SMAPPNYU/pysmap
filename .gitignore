@@ -63,3 +63,5 @@ target/
 
 .DS_Store
 chart_tests/
+
+config.py

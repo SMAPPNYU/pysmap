@@ -31,15 +31,15 @@ class TestSmappCollection(unittest.TestCase):
     	collection = SmappCollection('bson', file_path)
     	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
-    # def test_smapp_mongo_collection_iterates(self):
-    # 	collection = SmappCollection('mongo', 
-    # 		config['mongo']['host'], 
-    # 		config['mongo']['port'], 
-    # 		config['mongo']['user'], 
-    # 		config['mongo']['password'],
-    # 		config['mongo']['database'],
-    # 		config['mongo']['collection'])
-    # 	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
+    def test_smapp_mongo_collection_iterates(self):
+    	collection = SmappCollection('mongo', 
+    		config['mongo']['host'], 
+    		config['mongo']['port'], 
+    		config['mongo']['user'], 
+    		config['mongo']['password'],
+    		config['mongo']['database'],
+    		config['mongo']['collection'])
+    	self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
     def test_get_tweet_texts(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
