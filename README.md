@@ -98,6 +98,69 @@ for tweet in collection.get_tweets_containing('cat').tweet_language_is('fr'):
     print(tweet)
 ```
 
+#smapp_dataset
+
+this is the dataset class, it let you combine collections and datasets at will, it offers a simple interface for dealing with multiple collectios that requires a bit more work, and regex powertools that require a lot less work but a little more (although not much more as we provide examples) knowledge.
+
+abstract:
+```python
+
+dataset = SmappDataset(LIST_OF_SMAPP_COLLECTION_INPUTS_OR_DATASETS)
+
+# or 
+
+dataset = SmappDataset(collection_regex='', database_regex='', [], [])
+
+dataset = SmappDataset(collection_regex='', )
+
+```
+
+practical:
+```python
+# combine collections of the same type
+dataset = SmappDataset(['bson', '/path/to/my/bson/file1.bson'], ['bson', '/path/to/my/bson/file2.bson'], ['bson', '/path/to/my/bson/file3.bson'])
+
+dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_2'])
+
+# combine collections of different types
+
+dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'], ['bson', '/path/to/my/bson/file1.bson'], ['json', '/path/to/my/bson/json_file.json'])
+
+# or combine collections and datasets
+
+dataset_one = SmappDataset(['bson', '/path/to/my/bson/file1.bson'], ['bson', '/path/to/my/bson/file2.bson'], ['bson', '/path/to/my/bson/file3.bson'])
+
+dataset_two =  SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_2'])
+
+dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
+
+# or use regex to match for collections/dbs
+
+dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'])
+
+dataset = Smapp
+
+# or use regex to match non mongo collections
+
+dataset = SmappDataset(collection_regex='(^tweets.bson$|^tweets_\d+.bson$|^tweets.json$|^tweets_\d+.json$)', ['bson'], ['json'])
+
+#or use a regex to match both types
+
+dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['bson'], ['json'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'])
+
+
+```
+
+`regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources
+
+`collection_regex` - this is required, to grab all collections named tweets_X (backwards compatiblilty) use `(^tweets$|^tweets_\d+$)` for new/regular collections use `(^data$)` or `(^data$|^tweets$|^tweets_\d+$)` for compatilibly backwards and forwards, if you have a different naming convention you can use a regex to match for that.
+
+`database_regex` - only required for mongo datasets
+
+*input* several `SmappDataset` objects and/or `SmappCollection` objects
+
+*output*
+
 #get_tweets_containing
 
 gets tweets containing the specified term.
