@@ -111,9 +111,9 @@ dataset = SmappDataset([TYPE_OF INPUT, DATASOURCE_FILE_PATH], [TYPE_OF_INPUT, OT
 
 # or with regex
 
-dataset = SmappDataset(collection_regex=REGEX, database_regex=REGEX, [], [])
+dataset = SmappDataset(collection_regex=REGEX, database_regex=REGEX, [TYPE_OF_INPUT, TYPE_OF_INPUT, etc])
 
-dataset = SmappDataset(collection_regex='', )
+dataset = SmappDataset(collection_regex=REGEX, [TYPE_OF_INPUT, TYPE_OF_INPUT, etc])
 
 ```
 
@@ -136,13 +136,13 @@ dataset_two =  SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadW
 
 dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
 
-# or use regex to match for collections/dbs
+# or use regex to match for multiple collections/dbs
 
 dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'])
 
 dataset = Smapp
 
-# or use regex to match non mongo collections
+# or use regex to match multiple non-mongo collections
 
 dataset = SmappDataset(collection_regex='(^tweets.bson$|^tweets_\d+.bson$|^tweets.json$|^tweets_\d+.json$)', ['bson'], ['json'])
 
