@@ -105,11 +105,13 @@ this is the dataset class, it let you combine collections and datasets at will, 
 abstract:
 ```python
 
-dataset = SmappDataset(LIST_OF_SMAPP_COLLECTION_INPUTS_OR_DATASETS)
+# standard
 
-# or 
+dataset = SmappDataset([TYPE_OF INPUT, DATASOURCE_FILE_PATH], [TYPE_OF_INPUT, OTHER_MONGO_INPUTS])
 
-dataset = SmappDataset(collection_regex='', database_regex='', [], [])
+# or with regex
+
+dataset = SmappDataset(collection_regex=REGEX, database_regex=REGEX, [], [])
 
 dataset = SmappDataset(collection_regex='', )
 
@@ -136,7 +138,7 @@ dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], datase
 
 # or use regex to match for collections/dbs
 
-dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'])
+dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'])
 
 dataset = Smapp
 
@@ -147,15 +149,23 @@ dataset = SmappDataset(collection_regex='(^tweets.bson$|^tweets_\d+.bson$|^tweet
 #or use a regex to match both types
 
 dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['bson'], ['json'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'])
-
-
 ```
 
 `regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources
 
 `collection_regex` - this is required, to grab all collections named tweets_X (backwards compatiblilty) use `(^tweets$|^tweets_\d+$)` for new/regular collections use `(^data$)` or `(^data$|^tweets$|^tweets_\d+$)` for compatilibly backwards and forwards, if you have a different naming convention you can use a regex to match for that.
 
-`database_regex` - only required for mongo datasets
+`database_regex` - only required for mongo datasets, you can omit this variable if you are not using regex to try to match databases
+
+regex explanation example in the statement:
+
+```python
+dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'])
+```
+
+the collection regex `(^tweets$|^tweets_\d+$)` means match every collection that is called tweets or tweets_\d where `\d` is some number. so tweets, tweets_1, tweets_2, etc
+
+the database regex `(^GERMANY_ELECTION_2015_Nagler_\d+$)` means match every database that has GERMANY_ELECTION_2015_Nagler_\d where `\d` is some number. so GERMANY_ELECTION_2015_Nagler_1, GERMANY_ELECTION_2015_Nagler_2, etc
 
 *input* several `SmappDataset` objects and/or `SmappCollection` objects
 
