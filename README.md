@@ -88,7 +88,7 @@ collection = SmappCollection('csv', '/path/to/my/csv/file.csv')
 
 #smapp_dataset
 
-this is the dataset class, it let you combine collections and datasets at will, it offers a simple interface for dealing with multiple collectios that requires a bit more work, and regex powertools that require a lot less work but a little more (although not much more as we provide examples) knowledge.
+this is the dataset class, it lets you combine collections and datasets at will. it offers a simple interface for dealing with multiple collections that requires a bit more work and regex powertools that require a lot less work but a little more (although not much more as we provide examples) knowledge.
 
 abstract:
 ```python
@@ -118,13 +118,13 @@ dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteU
 
 # or combine collections and datasets
 
-collection = SmappCollection()
+collection = SmappCollection('csv', '/path/to/my/csv/file.csv')
 
 dataset_one = SmappDataset(['bson', '/path/to/my/bson/file1.bson'], ['bson', '/path/to/my/bson/file2.bson'], ['bson', '/path/to/my/bson/file3.bson'])
 
 dataset_two =  SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_2'])
 
-dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
+final_dataset = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two, collection)
 
 # or use regex to match for multiple collections/dbs
 
@@ -141,7 +141,7 @@ dataset = SmappDataset(collection_regex='(^tweets.bson$|^tweets_\d+.bson$|^tweet
 dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['bson'], ['json'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler'])
 ```
 
-`regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources
+`regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources, you must use regex type input patterns or lists+collections+datasets as inputs you cannot use both
 
 `collection_regex` - this is required, to grab all collections named tweets_X (backwards compatiblilty) use `(^tweets$|^tweets_\d+$)` for new/regular collections use `(^data$)` or `(^data$|^tweets$|^tweets_\d+$)` for compatilibly backwards and forwards, if you have a different naming convention you can use a regex to match for that.
 
