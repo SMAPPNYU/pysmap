@@ -10,6 +10,7 @@
 
 :snake: pysmap is a high level toolkit for dealing with twitter data it also has a higher level interface for [smappdragon](https://github.com/SMAPPNYU/smappdragon). it has functionality from the old toolkit and functionality from our old util library smappPy.
 - [twitterutil](#twitterutil)
+    - [smapp_dataset](#smapp_dataset)
     - [smapp_collection](#smapp_collection)
         - [get_tweets_containing](#get_tweets_containing)
         - [get_top_terms](#get_top_terms)
