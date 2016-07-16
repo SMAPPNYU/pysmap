@@ -176,14 +176,17 @@ class SmappDataset(object):
         return self
 
     def dump_to_bson(self, output_file):
-        self.collection.dump_to_bson(output_file)
+        for i, collection in enumerate(self.collections):
+            collection.dump_to_bson('{}_{}'.format(output_file, i))
 
     def dump_to_json(self, output_file):
-        self.collection.dump_to_json(output_file)
+        for i, collection in enumerate(self.collections):
+            collection.dump_to_json('{}_{}'.format(output_file, i))
 
     def dump_to_csv(self, output_file, keep_fields):
-        self.collection.dump_to_csv(output_file, keep_fields)
-
+        for i, collection in enumerate(self.collections):
+            collection.dump_to_csv('{}_{}'.format(output_file, i))
+            
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
 
