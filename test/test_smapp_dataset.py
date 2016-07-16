@@ -167,8 +167,8 @@ class TestSmappDataset(unittest.TestCase):
         collection.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
         self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_0.csv') > 0)
 
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv'):
-            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv')
 
     def test_get_top_hashtags(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
