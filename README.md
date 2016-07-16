@@ -83,22 +83,6 @@ collection = SmappCollection('csv', '/path/to/my/csv/file.csv')
 
 *returns* a collection object that you can use to call methods below on
 
-#iterate through tweets
-
-iterate through the tweets in the collection you've made.
-
-abstract:
-```python
-for tweet in collection:
-    print(tweet)
-```
-
-practical:
-```python
-for tweet in collection.get_tweets_containing('cat').tweet_language_is('fr'):
-    print(tweet)
-```
-
 #smapp_dataset
 
 this is the dataset class, it let you combine collections and datasets at will, it offers a simple interface for dealing with multiple collectios that requires a bit more work, and regex powertools that require a lot less work but a little more (although not much more as we provide examples) knowledge.
@@ -131,6 +115,8 @@ dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteU
 
 # or combine collections and datasets
 
+collection = SmappCollection()
+
 dataset_one = SmappDataset(['bson', '/path/to/my/bson/file1.bson'], ['bson', '/path/to/my/bson/file2.bson'], ['bson', '/path/to/my/bson/file3.bson'])
 
 dataset_two =  SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_2'])
@@ -149,7 +135,7 @@ dataset = SmappDataset(collection_regex='(^tweets.bson$|^tweets_\d+.bson$|^tweet
 
 #or use a regex to match both types
 
-dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['bson'], ['json'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler', 'tweets_1'])
+dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['bson'], ['json'], ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler'])
 ```
 
 `regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources
@@ -170,7 +156,23 @@ the database regex `(^GERMANY_ELECTION_2015_Nagler_\d+$)` means match every data
 
 *input* several `SmappDataset` objects and/or `SmappCollection` objects
 
-*output*
+*output* a SmappDataset object that can be used the same way a [SmappCollection](#smapp_collection) can be 
+
+#iterate through tweets
+
+iterate through the tweets in the collection you've made.
+
+abstract:
+```python
+for tweet in collection:
+    print(tweet)
+```
+
+practical:
+```python
+for tweet in collection.get_tweets_containing('cat').tweet_language_is('fr'):
+    print(tweet)
+```
 
 #get_tweets_containing
 

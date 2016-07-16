@@ -8,49 +8,64 @@ from datetime import datetime
 from langdetect import detect, lang_detect_exception, DetectorFactory
 from stop_words import get_stop_words
 
-class SmappCollection(object):
-    def __init__(self, data_source_type, *args):
-            # non mongo collection
-            if data_source_type == 'bson':
-                self.collection = smappdragon.BsonCollection(args[0])
-            elif data_source_type == 'json':
-                self.collection = smappdragon.JsonCollection(args[0])
-            elif data_source_type == 'csv':
-                self.collection = smappdragon.CsvCollection(args[0])
-            # mongo collection
-            elif data_source_type == 'mongo':
-                self.collection = smappdragon.MongoCollection(
-                    args[0],
-                    args[1],
-                    args[2],
-                    args[3],
-                    args[4],
-                    args[5]
-                )
-            # some kinda error
-            else:
-                raise IOError('Could not find your input, it\'s mispelled or doesn\'t exist.')
+class SmappDataset(object):
+    def __init__(self, *args, **kwargs):
+            self.collections = []
+            for input_list in args:
+                if 'collection_regex' in kwargs:
+                    input_list[1] = kwargs['collection_regex']
+
+                if input_list[0] == 'bson':
+                    self.collections.append(smappdragon.BsonCollection(input_list[1]))
+                elif input_list[0] == 'json':
+                    self.collections.append(smappdragon.JsonCollection(input_list[1]))
+                elif input_list[0] == 'csv':
+                    self.collections.append(smappdragon.CsvCollection(input_list[1]))
+                elif input_list[0] == 'mongo':
+                    if 'collection_regex' in kwargs:
+                        input_list[5] = kwargs['collection_regex']
+                    if 'database_regex' in kwargs:
+                        input_list[4] = kwargs['database_regex']
+                    self.collections.append(smappdragon.MongoCollection(
+                        input_list[0],
+                        input_list[1],
+                        input_list[2],
+                        input_list[3],
+                        input_list[4],
+                        input_list[5]
+                    ))
+                else:
+                    raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list))
+
+    #simple helper method for getting the iterators out
+    #of all collections in a SmappDataset
+    def get_collection_iterators(self):
+        return itertools.chain(*[collection.get_iterator() for collection in self.collections])
+
+    def apply_filter_to_collections(self, filter_to_set):
+        self.collections = [collection.set_custom_filter(filter_to_set) for collection in self.collections]
 
     def __iter__(self):
-        for tweet in self.collection.get_iterator():
+        for tweet in get_collection_iterators():
             yield tweet
 
     def get_tweet_texts(self):
-        for tweet in self.collection.get_iterator():
+        for tweet in get_collection_iterators():
             yield tweet['text']
 
     def count_tweets(self):
-        return sum(1 for tweet in self.collection.get_iterator())
+        return sum(1 for tweet in get_collection_iterators())
 
     def count_tweet_terms(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])
-        return sum(1 for tweet in self.collection.set_custom_filter(tweet_contains_terms).get_iterator())
+        self.apply_filter_to_collections(tweet_contains_terms)
+        return sum(1 for tweet in get_collection_iterators())
 
     def get_tweets_containing(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])
-        self.collection.set_custom_filter(tweet_contains_terms)
+        self.apply_filter_to_collections(tweet_contains_terms)
         return self
 
     def get_date_range(self, start, end):
@@ -58,13 +73,13 @@ class SmappCollection(object):
             raise ValueError('inputs to date_range must be python datetime.date objects')
         def tweet_is_in_date_range(tweet):
             return (datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') >= start) and (datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') < end)
-        self.collection.set_custom_filter(tweet_is_in_date_range)
+        self.apply_filter_to_collections(tweet_is_in_date_range)
         return self
 
     def tweet_language_is(self, *args):
         def language_in_tweet(tweet):
             return  any([language_code in tweet['lang'] for language_code in args])
-        self.collection.set_custom_filter(language_in_tweet)
+        self.apply_filter_to_collections(language_in_tweet)
         return self
 
     def detect_tweet_language(self, *args):
@@ -76,25 +91,25 @@ class SmappCollection(object):
             except lang_detect_exception.LangDetectException:
                 pass
             return  any([detected_lang in args])
-        self.collection.set_custom_filter(language_in_tweet)
+        self.apply_filter_to_collections(language_in_tweet)
         return self
 
     def user_language_is(self, *args):
         def language_in_tweet(tweet):
             return any([language_code in tweet['user']['lang'] for language_code in args])
-        self.collection.set_custom_filter(language_in_tweet)
+        self.apply_filter_to_collections(language_in_tweet)
         return self
 
     def exclude_retweets(self):
         def tweet_is_not_retweet(tweet):
             return 'retweeted_status' in tweet
-        self.collection.set_custom_filter(tweet_is_not_retweet)
+        self.apply_filter_to_collections(tweet_is_not_retweet)
         return self
 
     def tweets_with_user_location(self, place_term):
         def user_has_location(tweet):
             return tweet['user']['location'] and place_term in tweet['user']['location']
-        self.collection.set_custom_filter(user_has_location)
+        self.apply_filter_to_collections(user_has_location)
         return self
 
     def get_geo_enabled(self):
@@ -102,7 +117,7 @@ class SmappCollection(object):
             return ("coordinates" in tweet 
                 and tweet["coordinates"] is not None 
                 and "coordinates" in tweet["coordinates"])
-        self.collection.set_custom_filter(geo_enabled_filter)
+        self.apply_filter_to_collections(geo_enabled_filter)
         return self
 
     def get_non_geo_enabled(self):
@@ -110,7 +125,7 @@ class SmappCollection(object):
             return ('coordinates' not in tweet or
                 tweet['coordinates'] is None or
                 'coordinates' not in tweet['coordinates'])
-        self.collection.set_custom_filter(non_geo_enabled_filter)
+        self.apply_filter_to_collections(non_geo_enabled_filter)
         return self
 
     def get_top_entities(self, requested_entities):
@@ -121,7 +136,7 @@ class SmappCollection(object):
         for entity_type in requested_entities:
             returndict[entity_type] = {}
 
-        for tweet in self.collection.get_iterator():
+        for tweet in get_collection_iterators():
             for entity_type in requested_entities:
                 for entity in tweet_parser.get_entity(entity_type, tweet):
                     if entity_type == 'user_mentions':
@@ -157,7 +172,7 @@ class SmappCollection(object):
         return returnstructure
 
     def limit_number_of_tweets(self, limit):
-        self.collection.set_limit(limit)
+        self.collections = [collection.set_limit(limit) for collection in self.collections]
         return self
 
     def dump_to_bson(self, output_file):
