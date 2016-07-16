@@ -155,7 +155,7 @@ dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_rege
 
 the collection regex `(^tweets$|^tweets_\d+$)` means match every collection that is called tweets or tweets_\d where `\d` is some number. so tweets, tweets_1, tweets_2, etc
 
-the database regex `(^GERMANY_ELECTION_2015_Nagler_\d+$)` means match every database that has GERMANY_ELECTION_2015_Nagler_\d where `\d` is some number. so GERMANY_ELECTION_2015_Nagler_1, GERMANY_ELECTION_2015_Nagler_2, etc. the regex will not match 'GERMANY_ELECTION_2015_Nagler' in this case
+the database regex `(^GERMANY_ELECTION_2015_Nagler_\d+$)` means match every database that has GERMANY_ELECTION_2015_Nagler_\d where `\d` is some number. so GERMANY_ELECTION_2015_Nagler_1, GERMANY_ELECTION_2015_Nagler_2, etc. the regex will not match 'GERMANY_ELECTION_2015_Nagler' in this case as it lacks the term '^GERMANY_ELECTION_2015_Nagler$'.
 
 *input* several `SmappDataset` objects and/or `SmappCollection` objects
 
