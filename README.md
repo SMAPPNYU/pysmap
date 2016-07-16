@@ -438,6 +438,54 @@ for tweet in collection.sample(10):
 
 note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass
 
+#dump_to_bson
+
+abstract:
+```python
+```
+
+practical:
+```python
+```
+
+note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+
+*input*
+
+*output*
+
+#dump_to_json
+
+abstract:
+```python
+```
+
+practical:
+```python
+```
+
+note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
+
+*input*
+
+*output*
+
+#dump_to_csv
+
+abstract:
+```python
+```
+
+practical:
+```python
+```
+
+note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
+
+*input*
+
+*output*
+
 #get_top_entities
 
 returns the top twitter entites from a tweet object, you can [read about twitter entities here](https://dev.twitter.com/overview/api/entities-in-twitter-objects)

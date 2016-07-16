@@ -1,3 +1,5 @@
+import os
+import re
 import abc
 import random
 import operator
@@ -5,62 +7,69 @@ import itertools
 import smappdragon
 
 from datetime import datetime
+from pysmap.twitterutil.smapp_collection import SmappCollection
 from langdetect import detect, lang_detect_exception, DetectorFactory
 from stop_words import get_stop_words
 
 class SmappDataset(object):
     def __init__(self, *args, **kwargs):
             self.collections = []
-            for input_list in args:
-                if 'collection_regex' in kwargs:
-                    input_list[1] = kwargs['collection_regex']
-
-                if input_list[0] == 'bson':
-                    self.collections.append(smappdragon.BsonCollection(input_list[1]))
-                elif input_list[0] == 'json':
-                    self.collections.append(smappdragon.JsonCollection(input_list[1]))
-                elif input_list[0] == 'csv':
-                    self.collections.append(smappdragon.CsvCollection(input_list[1]))
-                elif input_list[0] == 'mongo':
-                    if 'collection_regex' in kwargs:
-                        input_list[5] = kwargs['collection_regex']
-                    if 'database_regex' in kwargs:
-                        input_list[4] = kwargs['database_regex']
-                    self.collections.append(smappdragon.MongoCollection(
-                        input_list[0],
-                        input_list[1],
-                        input_list[2],
-                        input_list[3],
-                        input_list[4],
-                        input_list[5]
-                    ))
+            for input_list_or_datasource in args:
+                if type(input_list_or_datasource) is SmappCollection:
+                    self.collections.append(input_list_or_datasource)
+                elif type(input_list_or_datasource) is type(self):
+                    self.collections.extend(input_list_or_datasource.collections)
                 else:
-                    raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list))
+                    if 'collection_regex' in kwargs:
+                        input_list_or_datasource[1] = kwargs['collection_regex']
+
+                    if input_list_or_datasource[0] == 'bson':
+                        self.collections.append(smappdragon.BsonCollection(input_list_or_datasource[1]))
+                    elif input_list_or_datasource[0] == 'json':
+                        self.collections.append(smappdragon.JsonCollection(input_list_or_datasource[1]))
+                    elif input_list_or_datasource[0] == 'csv':
+                        self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
+                    elif input_list_or_datasource[0] == 'mongo':
+                        if 'collection_regex' in kwargs:
+                            input_list_or_datasource[5] = kwargs['collection_regex']
+                        if 'database_regex' in kwargs:
+                            input_list_or_datasource[4] = kwargs['database_regex']
+                        self.collections.append(smappdragon.MongoCollection(
+                            input_list_or_datasource[0],
+                            input_list_or_datasource[1],
+                            input_list_or_datasource[2],
+                            input_list_or_datasource[3],
+                            input_list_or_datasource[4],
+                            input_list_or_datasource[5]
+                        ))
+                    else:
+                        raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list_or_datasource))
 
     #simple helper method for getting the iterators out
     #of all collections in a SmappDataset
     def get_collection_iterators(self):
         return itertools.chain(*[collection.get_iterator() for collection in self.collections])
 
+    # helper applies filters to all collections in dataset
     def apply_filter_to_collections(self, filter_to_set):
         self.collections = [collection.set_custom_filter(filter_to_set) for collection in self.collections]
 
     def __iter__(self):
-        for tweet in get_collection_iterators():
+        for tweet in self.get_collection_iterators():
             yield tweet
 
     def get_tweet_texts(self):
-        for tweet in get_collection_iterators():
+        for tweet in self.get_collection_iterators():
             yield tweet['text']
 
     def count_tweets(self):
-        return sum(1 for tweet in get_collection_iterators())
+        return sum(1 for tweet in self.get_collection_iterators())
 
     def count_tweet_terms(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])
         self.apply_filter_to_collections(tweet_contains_terms)
-        return sum(1 for tweet in get_collection_iterators())
+        return sum(1 for tweet in self.get_collection_iterators())
 
     def get_tweets_containing(self, *args):
         def tweet_contains_terms(tweet):
@@ -136,7 +145,7 @@ class SmappDataset(object):
         for entity_type in requested_entities:
             returndict[entity_type] = {}
 
-        for tweet in get_collection_iterators():
+        for tweet in self.get_collection_iterators():
             for entity_type in requested_entities:
                 for entity in tweet_parser.get_entity(entity_type, tweet):
                     if entity_type == 'user_mentions':
@@ -177,16 +186,19 @@ class SmappDataset(object):
 
     def dump_to_bson(self, output_file):
         for i, collection in enumerate(self.collections):
-            collection.dump_to_bson('{}_{}'.format(output_file, i))
+            filename, file_extension = output_file.split(os.extsep, 1)
+            collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
 
     def dump_to_json(self, output_file):
         for i, collection in enumerate(self.collections):
-            collection.dump_to_json('{}_{}'.format(output_file, i))
+            filename, file_extension = output_file.split(os.extsep, 1)
+            collection.dump_to_json('{}_{}.{}'.format(filename, i, file_extension))
 
     def dump_to_csv(self, output_file, keep_fields):
         for i, collection in enumerate(self.collections):
-            collection.dump_to_csv('{}_{}'.format(output_file, i))
-            
+            filename, file_extension = output_file.split(os.extsep, 1)
+            collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
 
@@ -206,7 +218,7 @@ class SmappDataset(object):
         term_counts = {}
         if not stop_words:
             stop_words = get_stop_words('en')
-        for tweet in self.collection.get_iterator():
+        for tweet in self.get_collection_iterators():
             split_tweet = tweet['text'].split()
             for tweet_token in split_tweet:
                 if tweet_token not in stop_words:
@@ -218,7 +230,7 @@ class SmappDataset(object):
         return return_counts
 
     def sample(self, k):
-        it = iter(self.collection.get_iterator())
+        it = iter(self.get_collection_iterators())
         sample = list(itertools.islice(it, k))
         random.shuffle(sample)
         for i, item in enumerate(it, start=k+1):
