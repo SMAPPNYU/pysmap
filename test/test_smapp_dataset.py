@@ -3,7 +3,7 @@ import unittest
 
 from datetime import datetime
 from test.config import config
-from pysmap import SmappDataset
+from pysmap import SmappDataset, SmappCollection
 
 class TestSmappDataset(unittest.TestCase):
 
@@ -11,13 +11,47 @@ class TestSmappDataset(unittest.TestCase):
         self.assertTrue(True)
 
     def test_smapp_dataset_takes_base_input_types(self):
-        pass
+        file_path_bson = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        file_path_json = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        file_path_csv = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['csv']['valid'])
+        collection = SmappDataset(['bson', file_path_bson], ['json', file_path_json], ['csv', file_path_csv])
+        self.assertTrue(len(list(collection)) > 0)
 
     def test_smapp_dataset_takes_collections_datasets_and_base_input_types(self):
-        pass
+        file_path_bson = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        file_path_bson_2 = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        file_path_json = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        file_path_csv = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['csv']['valid'])
+        collection = SmappCollection('bson', file_path_bson_2)
+        dataset_1 = SmappDataset(['bson', file_path_bson], ['csv', file_path_csv])
+        dataset_2 = SmappDataset(dataset_1,  ['json', file_path_json], collection)
+        self.assertTrue(len(list(dataset_2)) > 0)
 
-    def test_smapp_dataset_takes_regex(self):
-        pass
+    def test_smapp_dataset_takes_collection_regex(self):
+        dataset = SmappDataset(['mongo', 
+            config['mongo']['host'], 
+            config['mongo']['port'], 
+            config['mongo']['user'], 
+            config['mongo']['password'],
+            config['mongo']['database']], collection_regex='(^data$|^tweets$|^tweets_\d+$)')
+        self.assertTrue(len(list(dataset)) > 0)
+
+    def test_smapp_dataset_takes_database_regex(self):
+        dataset = SmappDataset(['mongo', 
+            config['mongo']['host'], 
+            config['mongo']['port'], 
+            config['mongo']['user'], 
+            config['mongo']['password'],
+            config['mongo']['collection']], database_regex='(^47Traitors$)')
+        self.assertTrue(len(list(dataset)) > 0)
+
+    def test_smapp_dataset_takes_database_regex_and_collection_regex(self):
+        dataset = SmappDataset(['mongo', 
+            config['mongo']['host'], 
+            config['mongo']['port'], 
+            config['mongo']['user'], 
+            config['mongo']['password']], database_regex='(^47Traitors$)', collection_regex='(^data$|^tweets$|^tweets_\d+$)')
+        self.assertTrue(len(list(dataset)) > 0)
 
     def test_smapp_bson_collection_iterates(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
@@ -40,15 +74,15 @@ class TestSmappDataset(unittest.TestCase):
         collection = SmappDataset(['bson', file_path])
         self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
-    # def test_smapp_mongo_collection_iterates(self):
-    #     collection = SmappDataset(['mongo', 
-    #         config['mongo']['host'], 
-    #         config['mongo']['port'], 
-    #         config['mongo']['user'], 
-    #         config['mongo']['password'],
-    #         config['mongo']['database'],
-    #         config['mongo']['collection']])
-    #     self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
+    def test_smapp_mongo_collection_iterates(self):
+        collection = SmappDataset(['mongo', 
+            config['mongo']['host'], 
+            config['mongo']['port'], 
+            config['mongo']['user'], 
+            config['mongo']['password'],
+            config['mongo']['database'],
+            config['mongo']['collection']])
+        self.assertTrue(len(list(collection.limit_number_of_tweets(100))) > 0)
 
     def test_get_tweet_texts(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])

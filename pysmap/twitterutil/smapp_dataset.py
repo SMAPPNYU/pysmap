@@ -2,6 +2,7 @@ import os
 import re
 import abc
 import random
+import pymongo
 import operator
 import itertools
 import smappdragon
@@ -16,13 +17,10 @@ class SmappDataset(object):
             self.collections = []
             for input_list_or_datasource in args:
                 if type(input_list_or_datasource) is SmappCollection:
-                    self.collections.append(input_list_or_datasource)
+                    self.collections.append(input_list_or_datasource.collection)
                 elif type(input_list_or_datasource) is type(self):
                     self.collections.extend(input_list_or_datasource.collections)
                 else:
-                    if 'collection_regex' in kwargs:
-                        input_list_or_datasource[1] = kwargs['collection_regex']
-
                     if input_list_or_datasource[0] == 'bson':
                         self.collections.append(smappdragon.BsonCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'json':
@@ -30,18 +28,41 @@ class SmappDataset(object):
                     elif input_list_or_datasource[0] == 'csv':
                         self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'mongo':
-                        if 'collection_regex' in kwargs:
-                            input_list_or_datasource[5] = kwargs['collection_regex']
-                        if 'database_regex' in kwargs:
-                            input_list_or_datasource[4] = kwargs['database_regex']
-                        self.collections.append(smappdragon.MongoCollection(
-                            input_list_or_datasource[0],
-                            input_list_or_datasource[1],
-                            input_list_or_datasource[2],
-                            input_list_or_datasource[3],
-                            input_list_or_datasource[4],
-                            input_list_or_datasource[5]
-                        ))
+                        if 'database_regex' in kwargs or 'collection_regex' in kwargs:
+                            mongo = pymongo.MongoClient(input_list_or_datasource[1], int(input_list_or_datasource[2]))
+                            if 'database_regex' in kwargs:
+                                db_regex = re.compile(kwargs['database_regex'])
+                                matched_dbs = [match.group(1) for db_name in mongo.database_names() for match in [db_regex.search(db_name)] if match]
+                            else:
+                                matched_dbs = [input_list_or_datasource[5]]
+
+                            for matched_db in matched_dbs:
+                                if 'collection_regex' in kwargs:
+                                    collection_regex = re.compile(kwargs['collection_regex'])
+                                    matched_collections = [match.group(1) for collection_name in mongo[matched_db].collection_names() for match in [collection_regex.search(collection_name)] if match]
+                                else:
+                                    if len(input_list_or_datasource) > 6:
+                                        matched_collections = [input_list_or_datasource[6]]
+                                    else:
+                                        matched_collections = [input_list_or_datasource[5]]
+                                for matched_collection in matched_collections:
+                                    self.collections.append(smappdragon.MongoCollection(
+                                        input_list_or_datasource[1],
+                                        input_list_or_datasource[2],
+                                        input_list_or_datasource[3],
+                                        input_list_or_datasource[4],
+                                        matched_db,
+                                        matched_collection
+                                    ))
+                        else:
+                            self.collections.append(smappdragon.MongoCollection(
+                                input_list_or_datasource[1],
+                                input_list_or_datasource[2],
+                                input_list_or_datasource[3],
+                                input_list_or_datasource[4],
+                                input_list_or_datasource[5],
+                                input_list_or_datasource[6]
+                            ))
                     else:
                         raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list_or_datasource))
 
