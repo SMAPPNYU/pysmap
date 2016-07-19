@@ -128,9 +128,9 @@ final_dataset = SmappDataset(['json', '/path/to/my/bson/json_file.json'], datase
 
 # or use regex to match for multiple collections/dbs
 
-dataset = SmappDataset(collection_regex='(^data$|^tweets$|^tweets_\d+$)', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler'])
+dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler'], collection_regex='(^data$|^tweets$|^tweets_\d+$)')
 
-dataset = SmappDataset(collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)', ['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'])
+dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'], collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)')
 ```
 
 `regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources, you must use regex type input patterns or lists+collections+datasets as inputs you cannot use both
