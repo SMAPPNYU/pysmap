@@ -16,6 +16,7 @@ setup(name='pysmap',
 	  'langdetect>=1.0.6',
 	  'bokeh>=0.11.1',
 	  'pandas>=0.18.1',
+	  'pymongo>=3.2.2',
 	  'pytz>=2016.4'
 	]
 )
