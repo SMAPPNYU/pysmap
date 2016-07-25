@@ -434,10 +434,12 @@ note: you can [read more about reservior sampling here](http://www.geeksforgeeks
 
 abstract:
 ```python
+collection.dump_to_bson(output_file)
 ```
 
 practical:
 ```python
+collection.dump_to_bson('/Users/blah/your_data.bson')
 ```
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
@@ -450,10 +452,12 @@ note: dump method works a little differently for SmappDataset objects, it does n
 
 abstract:
 ```python
+collection.dump_to_json(output_file)
 ```
 
 practical:
 ```python
+collection.dump_to_json('/Users/blah/your_data.bson')
 ```
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
@@ -466,10 +470,14 @@ note: dump method works a little differently for SmappDataset objects, it does n
 
 abstract:
 ```python
+collection.dump_to_csv('/PATH/TO/OUTPUT/FILE.csv', ['FIELD1', 'FIELD2', 'FIELD3.SUBFIELD', ETC])
 ```
 
 practical:
 ```python
+collection.dump_to_csv('~/smappstuff/file.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
+# or 
+collection.set_limit(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 ```
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
