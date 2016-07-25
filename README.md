@@ -444,9 +444,9 @@ collection.dump_to_bson('/Users/blah/your_data.bson')
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
 
-*input*
+*input* a path to a bson file
 
-*output*
+*output* a bson file with the data from your SmappCollection
 
 #dump_to_json
 
@@ -462,9 +462,9 @@ collection.dump_to_json('/Users/blah/your_data.bson')
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
 
-*input*
+*input* a path to a json file
 
-*output*
+*output* a json file with the data from your SmappCollection
 
 #dump_to_csv
 
@@ -482,9 +482,11 @@ collection.set_limit(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
 
-*input*
+*input* a path to a csv file and fields to keep
 
-*output*
+*output* a csv file with the data from your SmappCollection, but only the fields you chose to keep
+
+note: keeping fields is just csv by defintion, its hard to flatten all tweet data, tweets arent standard and have different data inside.
 
 #get_top_entities
 
