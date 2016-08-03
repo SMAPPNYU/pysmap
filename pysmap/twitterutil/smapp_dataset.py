@@ -29,6 +29,7 @@ class SmappDataset(object):
                     elif input_list_or_datasource[0] == 'csv':
                         self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'mongo':
+                        # we make one connection for each unique server/port pair the user provided
                         host_port_key = input_list_or_datasource[1]+str(input_list_or_datasource[2])
                         if host_port_key not in input_servers_ports:
                             new_connection = pymongo.MongoClient(input_list_or_datasource[1], int(input_list_or_datasource[2]))
