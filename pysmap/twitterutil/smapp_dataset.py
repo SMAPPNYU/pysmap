@@ -14,6 +14,7 @@ from stop_words import get_stop_words
 
 class SmappDataset(object):
     def __init__(self, *args, **kwargs):
+            input_servers_ports = {}
             self.collections = []
             for input_list_or_datasource in args:
                 if type(input_list_or_datasource) is SmappCollection:
@@ -28,6 +29,10 @@ class SmappDataset(object):
                     elif input_list_or_datasource[0] == 'csv':
                         self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'mongo':
+                        host_port_key = input_list_or_datasource[1]+str(input_list_or_datasource[2])
+                        if host_port_key not in input_servers_ports:
+                            new_connection = pymongo.MongoClient(input_list_or_datasource[1], int(input_list_or_datasource[2]))
+                            input_servers_ports[host_port_key] = new_connection
                         if 'database_regex' in kwargs or 'collection_regex' in kwargs:
                             mongo = pymongo.MongoClient(input_list_or_datasource[1], int(input_list_or_datasource[2]))
                             if 'database_regex' in kwargs:
@@ -47,21 +52,19 @@ class SmappDataset(object):
                                         matched_collections = [input_list_or_datasource[5]]
                                 for matched_collection in matched_collections:
                                     self.collections.append(smappdragon.MongoCollection(
-                                        input_list_or_datasource[1],
-                                        input_list_or_datasource[2],
                                         input_list_or_datasource[3],
                                         input_list_or_datasource[4],
                                         matched_db,
-                                        matched_collection
+                                        matched_collection,
+                                        passed_mongo=input_servers_ports[input_list_or_datasource[1]+str(input_list_or_datasource[2])]
                                     ))
                         else:
                             self.collections.append(smappdragon.MongoCollection(
-                                input_list_or_datasource[1],
-                                input_list_or_datasource[2],
                                 input_list_or_datasource[3],
                                 input_list_or_datasource[4],
                                 input_list_or_datasource[5],
-                                input_list_or_datasource[6]
+                                input_list_or_datasource[6],
+                                passed_mongo=input_servers_ports[input_list_or_datasource[1]+str(input_list_or_datasource[2])]
                             ))
                     else:
                         raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list_or_datasource))
