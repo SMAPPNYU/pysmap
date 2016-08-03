@@ -230,9 +230,9 @@ collection.count_tweet_terms(MUMBER_OF_TERMS, LIST_OF_STOP_WORDS)
 
 practical:
 ```python
-count = collection.count_tweet_terms(5)
+count = collection.get_top_terms(5)
 #or
-count = collection.count_tweet_terms(5, ['blah', 'it', 'cat'])
+count = collection.get_top_terms(5, ['blah', 'it', 'cat'])
 print(count)
 ```
 
