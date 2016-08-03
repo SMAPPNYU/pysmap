@@ -153,18 +153,6 @@ the database regex `(^GERMANY_ELECTION_2015_Nagler_\d+$)` means match every data
 
 *output* a SmappDataset object that can be used the same way a [SmappCollection](#smapp_collection) can be 
 
-developer note:
-```
-# we make one connection for each unique server/port pair the user provided
-# for input_list_or_datasource -
-# 0 is datatype ('mongo', 'bson', etc)
-# 1 is path or host
-# 2 is port
-# 3 username
-# 4 password
-# 5 db name (can be empty if database_regex)
-# 6 collection name (can be empty if collection_regex)
-```
 #iterate through tweets
 
 iterate through the tweets in the collection you've made.
