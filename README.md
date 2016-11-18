@@ -905,7 +905,6 @@ plots.bar_graph_tweets_with_location(collection, 'hours',  datetime(2015,9,1), d
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-
 #author
 
 [yvan](https://github.com/yvan)
