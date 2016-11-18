@@ -342,6 +342,23 @@ collection.exclude_retweets()
 
 *returns* a collection where there are no retweets
 
+
+#get_retweets
+
+gets all tweets that are retweets from the collection
+
+abstract:
+```python
+collection.get_retweets()
+```
+
+practical:
+```python
+collection.get_retweets()
+```
+
+*returns* a collection where there are only retweets
+
 #tweets_with_user_location
 
 returns tweets that have a user location
