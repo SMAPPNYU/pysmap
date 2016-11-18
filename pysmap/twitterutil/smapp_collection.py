@@ -87,8 +87,14 @@ class SmappCollection(object):
 
     def exclude_retweets(self):
         def tweet_is_not_retweet(tweet):
-            return 'retweeted_status' in tweet
+            return 'retweeted_status' not in tweet
         self.collection.set_custom_filter(tweet_is_not_retweet)
+        return self
+
+    def get_retweets(self):
+        def tweet_is_retweet(tweet):
+            return 'retweeted_status' in tweet
+        self.collection.set_custom_filter(tweet_is_retweet)
         return self
 
     def tweets_with_user_location(self, place_term):
