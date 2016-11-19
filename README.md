@@ -27,6 +27,7 @@
         - [count_tweet_terms](#count_tweet_terms)
         - [count_tweets](#count_tweets)
         - [exclude_retweets](#exclude_retweets)
+        - [get_retweets](#get_retweets)
         - [tweets_with_user_location](#tweets_with_user_location)
         - [limit_number_of_tweets](#limit_number_of_tweets)
         - [tweet_language_is](#tweet_language_is)
