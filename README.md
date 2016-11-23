@@ -486,6 +486,8 @@ note: dump method works a little differently for SmappDataset objects, it does n
 
 #dump_to_csv
 
+dumps a collection/dataset to a csv based on the fields you specify. can see the fields inside a tweet object [here](https://dev.twitter.com/overview/api/tweets).
+
 abstract:
 ```python
 collection.dump_to_csv('/PATH/TO/OUTPUT/FILE.csv', ['FIELD1', 'FIELD2', 'FIELD3.SUBFIELD', ETC])
