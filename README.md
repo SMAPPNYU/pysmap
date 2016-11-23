@@ -532,6 +532,8 @@ collection.set_limit(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id
 file_0.csv
 file_1.csv
 
+#where each file is like
+
 id_str,coordinates.coordinates.0,coordinates.coordinates.1,user.id_str,user.lang,lang,text,user.screen_name,user.location,user.description,created_at,user.friends_count,user.followers_count,retweet_count,entities.urls.0.expanded_url,entities.urls.1.expanded_url,entities.urls.2.expanded_url,entities.urls.3.expanded_url,entities.urls.4.expanded_url
 
 788556059375874048,50,50,2240756971,en,en,RT @dailypenn: The DP and @WellesleyNews are jointly endorsing Wellesley alum @HillaryClinton over Wharton ’68 @realDonaldTrump.… ,CorrectRecord,,Correct The Record is a strategic research and rapid response team designed to defend Hillary Clinton from baseless attacks.,Wed Oct 19 01:43:09 +0000 2016,224,23080,0,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/
