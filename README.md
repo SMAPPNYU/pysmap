@@ -502,7 +502,7 @@ collection.set_limit(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id
 
 *input* a path to a csv file and fields to keep
 
-```
+```python
 collection = pysmap.SmappCollection('json','/scratch/smapp/us_election_hillary_2016/data/us_election_hillary_2016_data__10_18_2016__00_00_00__23_59_59.json')
 # or dataset
 dataset = pysmap.SmappDataset(
