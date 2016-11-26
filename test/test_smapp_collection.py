@@ -83,6 +83,13 @@ class TestSmappCollection(unittest.TestCase):
         count = len([tweet for tweet in collection.get_date_range(datetime(2015,11,2), datetime(2015,11,3))])
         self.assertEqual(26, count)
 
+    def test_find_date_range(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        range_obj = collection.find_date_range()
+        self.assertEqual(datetime(2015, 11, 2, 19, 56, 33), range_obj['date_min'])
+        self.assertEqual(datetime(2015, 11, 6, 21, 35, 54), range_obj['date_max'])
+
     def test_tweet_language_is(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
@@ -105,7 +112,13 @@ class TestSmappCollection(unittest.TestCase):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
     	count = len([tweet for tweet in collection.exclude_retweets()])
-    	self.assertEqual(505, count)
+    	self.assertEqual(682, count)
+
+    def test_get_retweets(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection = SmappCollection('bson', file_path)
+        count = len([tweet for tweet in collection.get_retweets()])
+        self.assertEqual(505, count)
 
     def test_tweets_with_user_location(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
@@ -160,6 +173,18 @@ class TestSmappCollection(unittest.TestCase):
 
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.csv')
+
+    def test_dump_to_sqlite_db(self):
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.db'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.db')
+
+        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.db'
+        collection = SmappCollection('bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid'])
+        collection.dump_to_sqlite_db(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
+        self.assertTrue(os.path.getsize(output_path) > 0)
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.db'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.db')
 
     def test_get_top_hashtags(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])

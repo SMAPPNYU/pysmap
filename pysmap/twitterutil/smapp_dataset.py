@@ -110,6 +110,17 @@ class SmappDataset(object):
         self.apply_filter_to_collections(tweet_is_in_date_range)
         return self
 
+    def find_date_range(self):
+        date_min = datetime.max
+        date_max = datetime.min
+        for tweet in self.collection.get_collection_iterators():
+            date_to_process = datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
+            if date_to_process <= date_min:
+                date_min = date_to_process
+            if date_to_process >= date_max:
+                date_max = date_to_process
+        return {"date_min":date_min,"date_max":date_max}
+
     def tweet_language_is(self, *args):
         def language_in_tweet(tweet):
             return  any([language_code in tweet['lang'] for language_code in args])
@@ -136,8 +147,14 @@ class SmappDataset(object):
 
     def exclude_retweets(self):
         def tweet_is_not_retweet(tweet):
-            return 'retweeted_status' in tweet
+            return 'retweeted_status' not in tweet
         self.apply_filter_to_collections(tweet_is_not_retweet)
+        return self
+
+    def get_retweets(self):
+        def tweet_is_retweet(tweet):
+            return 'retweeted_status' in tweet
+        self.apply_filter_to_collections(tweet_is_retweet)
         return self
 
     def tweets_with_user_location(self, place_term):
@@ -223,6 +240,11 @@ class SmappDataset(object):
         for i, collection in enumerate(self.collections):
             filename, file_extension = output_file.split(os.extsep, 1)
             collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+
+    def dump_to_sqlite_db(self, output_file, keep_fields):
+        for i, collection in enumerate(self.collections):
+            filename, file_extension = output_file.split(os.extsep, 1)
+            collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})

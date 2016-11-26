@@ -61,6 +61,17 @@ class SmappCollection(object):
         self.collection.set_custom_filter(tweet_is_in_date_range)
         return self
 
+    def find_date_range(self):
+        date_min = datetime.max
+        date_max = datetime.min
+        for tweet in self.collection.get_iterator():
+            date_to_process = datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
+            if date_to_process <= date_min:
+                date_min = date_to_process
+            if date_to_process >= date_max:
+                date_max = date_to_process
+        return {"date_min":date_min,"date_max":date_max}
+
     def tweet_language_is(self, *args):
         def language_in_tweet(tweet):
             return  any(['lang' in tweet and language_code in tweet['lang'] for language_code in args])
@@ -175,6 +186,9 @@ class SmappCollection(object):
     def dump_to_csv(self, output_file, keep_fields):
         self.collection.dump_to_csv(output_file, keep_fields)
 
+    def dump_to_sqlite_db(self, output_file, keep_fields):
+        self.collection.dump_to_sqlite_db(output_file, keep_fields)
+
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
 
@@ -215,6 +229,7 @@ class SmappCollection(object):
                 sample[j] = item
         for sample_value in sample:
             yield sample_value
+
 '''
 author @yvan
 for a lower level set of tools see: https://github.com/SMAPPNYU/smappdragon
