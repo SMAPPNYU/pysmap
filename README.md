@@ -37,6 +37,7 @@
         - [dump_to_bson](#dump_to_bson)
         - [dump_to_json](#dump_to_json)
         - [dump_to_csv](#dump_to_csv)
+        - [dump_to_sqlite_db](#dump_to_sqlite_db)
 - [viz](#viz)
     - [plots](#plots)
         - [bar_graph_tweet_field_grouped_by_period](#bar_graph_tweet_field_grouped_by_period)
