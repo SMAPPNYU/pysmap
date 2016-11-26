@@ -637,7 +637,7 @@ sqlite> select * from data;
 687208777561448448|18673945|@yvanscher hey! saw u upvoted Cubeit on ProductHunt. Any feedback on how we can make Cubeit better for you? :) Thanks!|NULL|NULL|NULL|NULL
 686662539913084928|491074580|RT @PopSci: iOS 9.3 update will tint your screen at night, for your health https://t.co/zrDt4TsoXB https://t.co/yXCEGQPHWp|http://pops.ci/cJWqhM|NULL|http://twitter.com/PopSci/status/686661925267206144/photo/1|NULL
 ```
-
+note: when using a dataset to dump to sqlite, unlike the other dump methods, this will dump one, .db file instead of an output file for each input collection.
 
 #get_top_entities
 

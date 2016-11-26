@@ -243,8 +243,7 @@ class SmappDataset(object):
 
     def dump_to_sqlite_db(self, output_file, keep_fields):
         for i, collection in enumerate(self.collections):
-            filename, file_extension = output_file.split(os.extsep, 1)
-            collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+            collection.dump_to_sqlite_db(output_file, keep_fields)
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})

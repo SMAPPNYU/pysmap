@@ -218,16 +218,16 @@ class TestSmappDataset(unittest.TestCase):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv')
 
     def test_dump_to_sqlite_db(self):
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db'):
-            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.db'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.db')
 
         output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.db'
         collection = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
         collection.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
-        self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_0.db') > 0)
+        self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.db') > 0)
 
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db'):
-            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.db'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.db')
 
     def test_get_top_hashtags(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
