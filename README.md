@@ -24,6 +24,7 @@
         - [get_top_mentions](#get_top_mentions)
         - [get_top_media](#get_top_media)
         - [get_top_symbols](#get_top_symbols)
+        - [find_date_range](#find_date_range)
         - [count_tweet_terms](#count_tweet_terms)
         - [count_tweets](#count_tweets)
         - [exclude_retweets](#exclude_retweets)
@@ -276,6 +277,36 @@ collection.get_date_range(datetime(2014,1,30), datetime(2014,4,30))
 ```
 
 *returns* a collection that will only return tweets from the specified datetime range
+
+#find_date_range
+
+finds the date range (min/max date in a collection)
+
+abstract:
+```python
+collection.find_date_range()
+```
+
+practical:
+```python
+from datetime import datetime
+range = collection.find_date_range()
+print(range)
+if range['date_min'] > datetime.now()
+    print('greater')
+elif range['date_max'] < datetime.now():
+    print('less')
+    print('whatever')
+```
+
+*output* 
+```
+{"date_min":date_min,"date_max":date_max}
+# with actual datetime objects
+{"date_min":datetime(2016,5,23),"date_max":datetime(2016,5,24)}
+```
+
+*returns* a dictionary with two datetime objects
 
 #tweet_language_is
 
