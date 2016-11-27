@@ -292,6 +292,7 @@ practical:
 from datetime import datetime
 range = collection.find_date_range()
 print(range)
+# or compare to datetime objects
 if range['date_min'] > datetime.now()
     print('greater')
 elif range['date_max'] < datetime.now():
