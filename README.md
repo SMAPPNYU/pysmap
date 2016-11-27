@@ -301,8 +301,6 @@ elif range['date_max'] < datetime.now():
 
 *output* 
 ```
-{"date_min":date_min,"date_max":date_max}
-# with actual datetime objects
 {"date_min":datetime(2016,5,23),"date_max":datetime(2016,5,24)}
 ```
 
