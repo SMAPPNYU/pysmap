@@ -246,9 +246,9 @@ class SmappDataset(object):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields, write_header=(i == 0))
             else:
-                collection.dump_to_csv(output_file, keep_fields)
+                collection.dump_to_csv(output_file, keep_fields, write_header=(i == 0))
 
     def dump_to_sqlite_db(self, output_file, keep_fields, parallel=False):
         for i, collection in enumerate(self.collections):
