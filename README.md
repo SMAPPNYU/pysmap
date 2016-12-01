@@ -489,6 +489,10 @@ collection.dump_to_bson(output_file)
 practical:
 ```python
 collection.dump_to_bson('/Users/blah/your_data.bson')
+# or with a dataset dumping to one file
+dataset.dump_to_bson('/Users/blah/your_data.bson')
+# or with a dataset dumping to one file for each input
+dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 ```
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
@@ -506,7 +510,11 @@ collection.dump_to_json(output_file)
 
 practical:
 ```python
-collection.dump_to_json('/Users/blah/your_data.bson')
+collection.dump_to_json('/Users/blah/your_data.json')
+# or with a dataset dumping to one file
+dataset.dump_to_json('/Users/blah/your_data.json')
+# or with a dataset dumping to one file for each input
+dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 ```
 
 note: dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each collection, input, or 
@@ -529,6 +537,10 @@ practical:
 collection.dump_to_csv('~/smappstuff/file.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or 
 collection.limit_number_of_tweets(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
+# or with a dataset dumping to one file
+dataset.dump_to_csv('/Users/blah/your_data.csv')
+# or with a dataset dumping to one file for each input
+dataset.dump_to_csv('/Users/blah/your_data.csv', parallel=True)
 ```
 
 *input* a path to a csv file and fields to keep
@@ -624,6 +636,8 @@ field_list = ['id_str',
 'entities.urls.4.expanded_url']
 
 dataset.dump_to_sqlite_db('/scratch/smapp/compile_trump_hillary_csvs/us_election_hillary_2016_data.db', field_list)
+# or with a dataset dumping to one file for each input
+dataset.dump_to_sqlite_db('/scratch/smapp/compile_trump_hillary_csvs/us_election_hillary_2016_data.db', field_list, parallel=True)
 ```
 
 *input* a collection object and a list of fields/subfields
