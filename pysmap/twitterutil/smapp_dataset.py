@@ -226,24 +226,37 @@ class SmappDataset(object):
         self.collections = [collection.set_limit(limit) for collection in self.collections]
         return self
 
-    def dump_to_bson(self, output_file):
+    def dump_to_bson(self, output_file, parallel=False):
         for i, collection in enumerate(self.collections):
-            filename, file_extension = output_file.split(os.extsep, 1)
-            collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
+            if parallel:
+                filename, file_extension = output_file.split(os.extsep, 1)
+                collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
+            else:
+                collection.dump_to_bson(output_file)
 
-    def dump_to_json(self, output_file):
+    def dump_to_json(self, output_file, parallel=False):
         for i, collection in enumerate(self.collections):
-            filename, file_extension = output_file.split(os.extsep, 1)
-            collection.dump_to_json('{}_{}.{}'.format(filename, i, file_extension))
+            if parallel:
+                filename, file_extension = output_file.split(os.extsep, 1)
+                collection.dump_to_json('{}_{}.{}'.format(filename, i, file_extension))
+            else:
+                collection.dump_to_json(output_file)
 
-    def dump_to_csv(self, output_file, keep_fields):
+    def dump_to_csv(self, output_file, keep_fields, parallel=False):
         for i, collection in enumerate(self.collections):
-            filename, file_extension = output_file.split(os.extsep, 1)
-            collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+            if parallel:
+                filename, file_extension = output_file.split(os.extsep, 1)
+                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+            else:
+                collection.dump_to_csv(output_file, keep_fields)
 
-    def dump_to_sqlite_db(self, output_file, keep_fields):
+    def dump_to_sqlite_db(self, output_file, keep_fields, parallel=False):
         for i, collection in enumerate(self.collections):
-            collection.dump_to_sqlite_db(output_file, keep_fields)
+            if parallel:
+                filename, file_extension = output_file.split(os.extsep, 1)
+                collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+            else:
+                collection.dump_to_sqlite_db(output_file, keep_fields)
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
