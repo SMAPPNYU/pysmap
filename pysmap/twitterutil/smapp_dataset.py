@@ -1,6 +1,7 @@
 import os
 import re
 import abc
+import glob
 import random
 import pymongo
 import operator
@@ -23,11 +24,23 @@ class SmappDataset(object):
                     self.collections.extend(input_list_or_datasource.collections)
                 else:
                     if input_list_or_datasource[0] == 'bson':
-                        self.collections.append(smappdragon.BsonCollection(input_list_or_datasource[1]))
+                        if 'file_pattern' in kwargs:
+                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                                self.collections.append(smappdragon.BsonCollection(path))
+                        else:
+                            self.collections.append(smappdragon.BsonCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'json':
-                        self.collections.append(smappdragon.JsonCollection(input_list_or_datasource[1]))
+                        if 'file_pattern' in kwargs:
+                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                                self.collections.append(smappdragon.JsonCollection(path))
+                        else:
+                            self.collections.append(smappdragon.JsonCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'csv':
-                        self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
+                        if 'file_pattern' in kwargs:
+                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                                self.collections.append(smappdragon.CsvCollection(path))
+                        else:
+                            self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'mongo':
                         # we make one connection for each unique server/port pair the user provided
                         host_port_key = input_list_or_datasource[1]+str(input_list_or_datasource[2])

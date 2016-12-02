@@ -98,14 +98,19 @@ abstract:
 
 # standard
 
-dataset = SmappDataset([TYPE_OF INPUT, DATASOURCE_FILE_PATH], [TYPE_OF_INPUT, OTHER_MONGO_INPUTS])
+dataset = SmappDataset([TYPE_OF INPUT, FILE_PATH], [TYPE_OF_INPUT, MONGO_INPUTS])
 
-# or with regex
+# or with regex for matching mongo databases/collections
+# this is only for mongo and not for files
 
-dataset = SmappDataset(collection_regex=REGEX, database_regex=REGEX, [TYPE_OF_INPUT, TYPE_OF_INPUT, etc])
+dataset = SmappDataset(collection_regex=REGEX, database_regex=REGEX, [MONGO_INPUT, MONGO_INPUT, etc])
 
-dataset = SmappDataset(collection_regex=REGEX, [TYPE_OF_INPUT, TYPE_OF_INPUT, etc])
+dataset = SmappDataset(collection_regex=REGEX, [MONGO_INPUT, MONGO_INPUT, etc])
 
+# or with a unix style file pattern for matching file paths (this is not regex)
+# this is only for files and not for mongo
+
+dataset = SmappDataset([TYPE_OF_INPUT], file_pattern=FILE_PATTTERN)
 ```
 
 practical:
@@ -134,6 +139,13 @@ final_dataset = SmappDataset(['json', '/path/to/my/bson/json_file.json'], datase
 dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD', 'GERMANY_ELECTION_2015_Nagler'], collection_regex='(^data$|^tweets$|^tweets_\d+$)')
 
 dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'], collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)')
+
+# or use a file pattern to match many files
+dataset_one = SmappDataset(['bson'], file_pattern='~/smappwork/data_*.bson')
+
+dataset_two = SmappDataset(['json'], file_pattern='~/smappwork/data_*.json')
+
+dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
 ```
 
 `regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources, you must use regex type input patterns or lists+collections+datasets as inputs you cannot use both
@@ -141,6 +153,8 @@ dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteU
 `collection_regex` - this is required, to grab all collections named tweets_X (backwards compatiblilty) use `(^tweets$|^tweets_\d+$)` for new/regular collections use `(^data$)` or `(^data$|^tweets$|^tweets_\d+$)` for compatilibly backwards and forwards, if you have a different naming convention you can use a regex to match for that.
 
 `database_regex` - only required for mongo datasets, you can omit this variable if you are not using regex to try to match databases
+
+`file_pattern` - use to select multiple file paths based off a unix style pattern. pysmap smapp_dataset uses  [glob](https://docs.python.org/2/library/glob.html#module-glob) under the hood to match the filepaths. pysmap also includes tilde `~` expansion which is not included by glob.
 
 regex explanation example in the statement:
 
