@@ -154,7 +154,30 @@ dataset_three = SmappDataset(['json', '/non/pattern/path/to/my/bson/json_file.js
 
 `database_regex` - only required for mongo datasets, you can omit this variable if you are not using regex to try to match databases
 
-`file_pattern` - use to select multiple file paths based off a unix style pattern. pysmap smapp_dataset uses [glob](https://docs.python.org/2/library/glob.html#module-glob) under the hood to match the filepaths. pysmap also includes tilde `~` expansion which is not included by glob. so for example `/scratch/smapp/test_dumps_dec1/dump_*.json` would match `/scratch/smapp/test_dumps_dec1/dump_1.json` and `/scratch/smapp/test_dumps_dec1/dump_blah_blah.json`. `try_dump_dat_parallel_?.bson` would match `try_dump_dat_parallel_0.bson` and `try_dump_dat_parallel_1.bson`. `try_dump_dat_parallel_[0-9].*` would match files, `try_dump_dat_parallel_0.bson  try_dump_dat_parallel_0.csv  try_dump_dat_parallel_0.db  try_dump_dat_parallel_0.json  try_dump_dat_parallel_1.bson  try_dump_dat_parallel_1.csv  try_dump_dat_parallel_1.db  try_dump_dat_parallel_1.json`. read about [unix file patterns here](http://www.robelle.com/smugbook/wildcard.html).
+`file_pattern` - use to select multiple file paths based off a unix style pattern. pysmap smapp_dataset uses [glob](https://docs.python.org/2/library/glob.html#module-glob) under the hood to match the filepaths. pysmap also includes tilde `~` expansion which is not included by glob. so for example:
+```
+/scratch/smapp/test_dumps_dec1/dump_*.json
+#would match 
+/scratch/smapp/test_dumps_dec1/dump_1.json
+/scratch/smapp/test_dumps_dec1/dump_blah_blah.json 
+#and
+try_dump_dat_parallel_?.bson
+#would match
+try_dump_dat_parallel_0.bson
+try_dump_dat_parallel_1.bson
+#and
+try_dump_dat_parallel_[0-9].* 
+#would match
+try_dump_dat_parallel_0.bson
+try_dump_dat_parallel_0.csv 
+try_dump_dat_parallel_0.db 
+try_dump_dat_parallel_0.json 
+try_dump_dat_parallel_1.bson 
+try_dump_dat_parallel_1.csv 
+try_dump_dat_parallel_1.db
+try_dump_dat_parallel_1.json
+```
+read about [unix file patterns here](http://www.robelle.com/smugbook/wildcard.html).
 
 regex explanation example in the statement:
 
