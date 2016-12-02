@@ -110,7 +110,7 @@ dataset = SmappDataset(collection_regex=REGEX, [MONGO_INPUT, MONGO_INPUT, etc])
 # or with a unix style file pattern for matching file paths (this is not regex)
 # this is only for files and not for mongo
 
-dataset = SmappDataset([TYPE_OF_INPUT], file_pattern=FILE_PATTTERN)
+dataset = SmappDataset([TYPE_OF_INPUT, 'file_pattern', FILE_PATTTERN], [TYPE_OF_INPUT, 'file_pattern', FILE_PATTTERN], etc)
 ```
 
 practical:
@@ -141,11 +141,11 @@ dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteU
 dataset = SmappDataset(['mongo', 'superhost.bio.nyu.edu', 27574, smappReadWriteUserName, 'PASSWORD'], collection_regex='(^tweets$|^tweets_\d+$)', database_regex='(^GERMANY_ELECTION_2015_Nagler_\d+$)')
 
 # or use a file pattern to match many files
-dataset_one = SmappDataset(['bson'], file_pattern='~/smappwork/data_*.bson')
+dataset_one = SmappDataset(['bson', 'file_pattern', '~/smappwork/data_*.bson'])
 
-dataset_two = SmappDataset(['json'], file_pattern='~/smappwork/data_*.json')
+dataset_two = SmappDataset(['json', 'file_pattern', '~/smappwork/data_*.json'], ['csv', 'file_pattern', '/Users/yvan/data/counts_*.csv'])
 
-dataset_three = SmappDataset(['json', '/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
+dataset_three = SmappDataset(['json', '/non/pattern/path/to/my/bson/json_file.json'], dataset_one, dataset_two)
 ```
 
 `regex` - regex stands for 'regular expression' its the way programmers pattern match on words, so regex inputs for SmappDataset allow you to pattern match data sources, you must use regex type input patterns or lists+collections+datasets as inputs you cannot use both

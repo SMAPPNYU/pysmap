@@ -56,18 +56,18 @@ class TestSmappDataset(unittest.TestCase):
 
     def test_smapp_dataset_file_pattern_takes_a_unix_pattern(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), 'data/val*.bson')
-        dataset = SmappDataset(['bson'], file_pattern=file_path)
+        dataset = SmappDataset(['bson', 'file_pattern', file_path])
         self.assertTrue(len(list(dataset)) > 0)
 
     def test_smapp_dataset_file_pattern_takes_home_path(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), 'data/val*.bson')
         file_path = file_path.replace('/Users/yvanscher', '~')
-        dataset = SmappDataset(['bson'], file_pattern=file_path)
+        dataset = SmappDataset(['bson','file_pattern',file_path])
         self.assertTrue(len(list(dataset)) > 0)
 
     def test_smapp_dataset_file_pattern_returns_two_collections(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), 'data/val*.bson')
-        dataset = SmappDataset(['bson'], file_pattern=file_path)
+        dataset = SmappDataset(['bson','file_pattern',file_path])
         self.assertTrue(all([type(collection) == BsonCollection for collection in dataset.collections]))
 
     def test_smapp_bson_collection_iterates(self):

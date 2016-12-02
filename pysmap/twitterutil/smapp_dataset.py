@@ -24,20 +24,20 @@ class SmappDataset(object):
                     self.collections.extend(input_list_or_datasource.collections)
                 else:
                     if input_list_or_datasource[0] == 'bson':
-                        if 'file_pattern' in kwargs:
-                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                        if 'file_pattern' == input_list_or_datasource[1]:
+                            for path in glob.glob(os.path.expanduser(input_list_or_datasource[2])):
                                 self.collections.append(smappdragon.BsonCollection(path))
                         else:
                             self.collections.append(smappdragon.BsonCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'json':
-                        if 'file_pattern' in kwargs:
-                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                        if 'file_pattern' == input_list_or_datasource[1]:
+                            for path in glob.glob(os.path.expanduser(input_list_or_datasource[2])):
                                 self.collections.append(smappdragon.JsonCollection(path))
                         else:
                             self.collections.append(smappdragon.JsonCollection(input_list_or_datasource[1]))
                     elif input_list_or_datasource[0] == 'csv':
-                        if 'file_pattern' in kwargs:
-                            for path in glob.glob(os.path.expanduser(kwargs['file_pattern'])):
+                        if 'file_pattern' == input_list_or_datasource[1]:
+                            for path in glob.glob(os.path.expanduser(input_list_or_datasource[2])):
                                 self.collections.append(smappdragon.CsvCollection(path))
                         else:
                             self.collections.append(smappdragon.CsvCollection(input_list_or_datasource[1]))
