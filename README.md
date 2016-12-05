@@ -575,9 +575,9 @@ collection.dump_to_csv('~/smappstuff/file.csv', ['id_str', 'entities.hashtags.0'
 # or 
 collection.limit_number_of_tweets(5).dump_to_csv('/Users/kevin/work/smappwork/file.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or with a dataset dumping to one file
-dataset.dump_to_csv('/Users/blah/your_data.csv')
+dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or with a dataset dumping to one file for each input
-dataset.dump_to_csv('/Users/blah/your_data.csv', parallel=True)
+dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], parallel=True)
 ```
 
 *input* a path to a csv file and fields to keep
