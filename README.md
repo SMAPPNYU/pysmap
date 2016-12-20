@@ -52,6 +52,8 @@
         - [bar_graph_tweets_with_symbols](#bar_graph_tweets_with_symbols)
         - [bar_graph_tweets_with_retweets](#bar_graph_tweets_with_retweets)
         - [bar_graph_tweets_with_locations](#bar_graph_tweets_with_locations)
+    - [networks](#networks)
+        - [retweet_network](#retweet_network)
 
 #installation
 
@@ -1121,6 +1123,61 @@ plots.bar_graph_tweets_with_location(collection, 'hours',  datetime(2015,9,1), d
 ```
 
 *returns* an html graph file and opens the graph in the default browser of the user
+
+#networks
+
+code for making network graphs of twitter data
+
+#retweet_network
+
+export a retweet graph using the `networkx` library where users are nodes, retweets are directed edges.
+
+abstract:
+```python
+import networkx as nx
+digraph = networks.retweet_network(COLLECTION_OBJECT, TWEET_METADATA, USER_METADATA)
+nx.write_graphml(digraph, '/path/where/you/want/your.graphml')
+```
+
+practical:
+```python
+import networkx as nx
+
+tweet_fields = ['id_str', 'retweeted_status.id_str', 'timestamp', 'text', 'lang']
+user_fields = ['id_str', 'screen_name', 'location', 'description']
+
+digraph = networks.retweet_network(collection, tweet_fields, user_fields)
+nx.write_graphml(digraph, '~/smappdata/collection_retweets.graphml')
+
+# or omitting metadata (which saves space)
+
+col = collection.get_tweets_containing('cats').get_get_retweets()
+digraph = retweet_network(col, [], [])
+nx.write_graphml(digraph, '/path/to/outputfile.graphml')
+```
+
+*input*
+
+`collection` - [smapp_dataset](#smapp_dataset) or [smapp_collection](#smapp_collection)
+
+`user_fields` - is a list of fields from the User object that will be included as attributes of the nodes.
+
+`tweet_fields` - is a list of the fields from the Tweet object that will be included as attributes of the edges.
+
+*output*
+
+a `.graphml` file may then be opened in graph analysis/visualization programs such as [Gephi](http://gephi.github.io/) or [Pajek](http://vlado.fmf.uni-lj.si/pub/networks/pajek/).
+
+note: if the collection result includes non-retweets as well, users with no retweets
+will also appear in the graph as isolated nodes. only retweets are edges in the resulting graph.
+
+note: nodes and edges have attributes attached to them, which are customizable using the `user_fields` and `tweet_fields` arguments.
+
+note: for large graphs where the structure is interesting but the tweet text itself is not, it is advisable to ommit most of the metadata.
+
+note: the `networkx` library also provides algorithms for [vizualization](http://networkx.github.io/documentation/networkx-1.9.1/reference/drawing.html) and [analysis](http://networkx.github.io/documentation/networkx-1.9.1/reference/algorithms.html).
+
+note: there are no defaults, you have to specify the fields you want.
 
 #author
 
