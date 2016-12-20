@@ -1136,6 +1136,7 @@ abstract:
 ```python
 import networkx as nx
 from pysmap import networks
+
 digraph = networks.retweet_network(COLLECTION_OBJECT, TWEET_METADATA, USER_METADATA)
 nx.write_graphml(digraph, '/path/where/you/want/your.graphml')
 ```
