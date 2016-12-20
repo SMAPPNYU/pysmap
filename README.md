@@ -1155,7 +1155,7 @@ nx.write_graphml(digraph, '~/smappdata/collection_retweets.graphml')
 # or omitting metadata (which saves space)
 col = collection.get_tweets_containing('cats').get_retweets()
 digraph = networks.retweet_network(col, [], [])
-nx.write_graphml(digraph, '/path/to/outputfile.graphml')
+nx.write_graphml(digraph, '~/smappdata/collection_sparse_retweets.graphml')
 ```
 
 *input*
