@@ -211,6 +211,13 @@ for tweet in collection.get_tweets_containing('cat').tweet_language_is('fr'):
     print(tweet)
 ```
 
+note:
+
+if on nyu hpc, print will not work, totally out of my control. you gotta change locale. 
+
+to fix it, you need to reset the default bash encoding BEFORE opening/running python. just type in bash:
+LANG=en_US.utf8 
+
 #get_tweets_containing
 
 gets tweets containing the specified term.
