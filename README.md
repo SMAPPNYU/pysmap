@@ -216,7 +216,9 @@ note:
 if on nyu hpc, print will not work, totally out of my control. you gotta change locale. 
 
 to fix it, you need to reset the default bash encoding BEFORE opening/running python. just type in bash:
+```
 LANG=en_US.utf8 
+```
 
 #get_tweets_containing
 
