@@ -1,6 +1,7 @@
 import os
 import re
 import abc
+import copy
 import glob
 import random
 import pymongo
@@ -106,22 +107,25 @@ class SmappDataset(object):
     def count_tweet_terms(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])
-        self.apply_filter_to_collections(tweet_contains_terms)
-        return sum(1 for tweet in self.get_collection_iterators())
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(tweet_contains_terms)
+        return sum(1 for tweet in cp.get_collection_iterators())
 
     def get_tweets_containing(self, *args):
         def tweet_contains_terms(tweet):
             return any([term in tweet['text'] for term in args])
-        self.apply_filter_to_collections(tweet_contains_terms)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(tweet_contains_terms)
+        return cp
 
     def get_date_range(self, start, end):
         if type(start) is not datetime or type(end) is not datetime:
             raise ValueError('inputs to date_range must be python datetime.date objects')
         def tweet_is_in_date_range(tweet):
             return (datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') >= start) and (datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y') < end)
-        self.apply_filter_to_collections(tweet_is_in_date_range)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(tweet_is_in_date_range)
+        return cp
 
     def find_date_range(self):
         date_min = datetime.max
@@ -137,8 +141,9 @@ class SmappDataset(object):
     def tweet_language_is(self, *args):
         def language_in_tweet(tweet):
             return  any([language_code in tweet['lang'] for language_code in args])
-        self.apply_filter_to_collections(language_in_tweet)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(language_in_tweet)
+        return cp
 
     def detect_tweet_language(self, *args):
         DetectorFactory.seed = 0
@@ -149,48 +154,55 @@ class SmappDataset(object):
             except lang_detect_exception.LangDetectException:
                 pass
             return  any([detected_lang in args])
-        self.apply_filter_to_collections(language_in_tweet)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(language_in_tweet)
+        return cp
 
     def user_language_is(self, *args):
         def language_in_tweet(tweet):
             return any([language_code in tweet['user']['lang'] for language_code in args])
-        self.apply_filter_to_collections(language_in_tweet)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(language_in_tweet)
+        return cp
 
     def exclude_retweets(self):
         def tweet_is_not_retweet(tweet):
             return 'retweeted_status' not in tweet
-        self.apply_filter_to_collections(tweet_is_not_retweet)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(tweet_is_not_retweet)
+        return cp
 
     def get_retweets(self):
         def tweet_is_retweet(tweet):
             return 'retweeted_status' in tweet
-        self.apply_filter_to_collections(tweet_is_retweet)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(tweet_is_retweet)
+        return cp
 
     def tweets_with_user_location(self, place_term):
         def user_has_location(tweet):
             return tweet['user']['location'] and place_term in tweet['user']['location']
-        self.apply_filter_to_collections(user_has_location)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(user_has_location)
+        return cp
 
     def get_geo_enabled(self):
         def geo_enabled_filter(tweet):
             return ("coordinates" in tweet 
                 and tweet["coordinates"] is not None 
                 and "coordinates" in tweet["coordinates"])
-        self.apply_filter_to_collections(geo_enabled_filter)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(geo_enabled_filter)
+        return cp
 
     def get_non_geo_enabled(self):
         def non_geo_enabled_filter(tweet):
             return ('coordinates' not in tweet or
                 tweet['coordinates'] is None or
                 'coordinates' not in tweet['coordinates'])
-        self.apply_filter_to_collections(non_geo_enabled_filter)
-        return self
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(non_geo_enabled_filter)
+        return cp
 
     def get_top_entities(self, requested_entities):
         returndict = {}
@@ -236,8 +248,9 @@ class SmappDataset(object):
         return returnstructure
 
     def limit_number_of_tweets(self, limit):
-        self.collections = [collection.set_limit(limit) for collection in self.collections]
-        return self
+        cp = copy.deepcopy(self)
+        cp.collections = [collection.set_limit(limit) for collection in cp.collections]
+        return cp
 
     def dump_to_bson(self, output_file, parallel=False):
         for i, collection in enumerate(self.collections):

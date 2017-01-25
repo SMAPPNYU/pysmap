@@ -506,6 +506,9 @@ for tweet in collection.limit_number_of_tweets(145):
 
 *returns* a collection that is limited on terms of the number of tweets it can output
 
+node: works differently than expected on datasets, it will apply this limit to each sub collection/file in the dataset, so if you have 5 files in a dataset it would apply a liit of 145 to each file in the dataset, and
+you would end up with 145 x 5 = 725 tweets.
+
 #sample
 
 gets a sample of tweets from a collection using reservior sampling
