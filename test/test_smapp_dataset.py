@@ -145,7 +145,7 @@ class TestSmappDataset(unittest.TestCase):
 
     def test_find_date_range(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
-        dataset = SmappCollection('bson', file_path)
+        dataset = SmappDataset(['bson', file_path])
         range_obj = dataset.find_date_range()
         self.assertEqual(datetime(2015, 11, 2, 19, 56, 33), range_obj['date_min'])
         self.assertEqual(datetime(2015, 11, 6, 21, 35, 54), range_obj['date_max'])

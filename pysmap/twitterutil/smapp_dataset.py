@@ -126,7 +126,7 @@ class SmappDataset(object):
     def find_date_range(self):
         date_min = datetime.max
         date_max = datetime.min
-        for tweet in self.collection.get_collection_iterators():
+        for tweet in self.get_collection_iterators():
             date_to_process = datetime.strptime(tweet['created_at'],'%a %b %d %H:%M:%S +0000 %Y')
             if date_to_process <= date_min:
                 date_min = date_to_process
