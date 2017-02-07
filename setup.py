@@ -17,6 +17,7 @@ setup(name='pysmap',
 	  'bokeh>=0.11.1',
 	  'pandas>=0.18.1',
 	  'pymongo>=3.2.2',
-	  'pytz>=2016.4'
+	  'pytz>=2016.4',
+	  'networkx>=1.11'
 	]
 )
