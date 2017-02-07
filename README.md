@@ -389,6 +389,8 @@ collection.detect_tweet_language('en')
 
 *returns* a collection where all the tweets have their text language as the specified language
 
+note: uses [langdetect](https://pypi.python.org/pypi/langdetect?) under the hood. it is a pythoh port of google language detection tool.
+
 
 #user_language_is
 
