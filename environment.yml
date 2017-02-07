@@ -1,13 +1,10 @@
 name: pysmap
 dependencies:
-- python=3.5
-- pip
-- pylint=1.5.4
-- bokeh=0.11.1
-- pandas=0.18.1
-- pytz=2016.4
+- python=3.6
+- bokeh
+- pytz
 - pip:
-  - smappdragon
+  - smappdragon==0.0.41
   - langdetect>=1.0.6
   - stop-words>=2015.2.23.1
   
