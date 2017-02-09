@@ -367,7 +367,7 @@ collection.tweet_language_is(LANGUAGE_CODES)
 practical:
 ```python
 #get tweets in english and french
-collection.tweet_language_is(['en', 'fr'])
+collection.tweet_language_is('en', 'fr')
 ```
 
 *returns* a collection where all the tweets have their text language as the specified language
@@ -385,6 +385,8 @@ practical:
 ```python
 #get tweets in english
 collection.detect_tweet_language('en')
+#get tweetsi n english and french
+collection.detect_tweet_language('en', 'fr')
 ```
 
 *returns* a collection where all the tweets have their text language as the specified language
