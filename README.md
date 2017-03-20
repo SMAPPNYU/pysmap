@@ -55,17 +55,17 @@
     - [networks](#networks)
         - [retweet_network](#retweet_network)
 
-#installation
+# installation
 
 `pip install pysmap`
 
 `pip install pysmap --upgrade`
 
-#twitterutil
+# twitterutil
 
 the package with an array of twitter tools.
 
-#smapp_collection
+# smapp_collection
 
 this is the smapp_collection class, an abstraction of smappdragon collections.
 
@@ -91,7 +91,7 @@ collection = SmappCollection('csv', '/path/to/my/csv/file.csv')
 
 *returns* a collection object that you can use to call methods below on
 
-#smapp_dataset
+# smapp_dataset
 
 this is the dataset class, it can be used anywhere one might use a [SmappCollection](#smapp_collection) object. it lets you combine collections and other datasets at will.
 
@@ -220,7 +220,7 @@ to fix it, you need to reset the default bash encoding BEFORE opening/running py
 LANG=en_US.utf8 
 ```
 
-#get_tweets_containing
+# get_tweets_containing
 
 gets tweets containing the specified term.
 
@@ -236,7 +236,7 @@ collection.get_tweets_containing('cats')
 
 *returns* a collections which will filter out any tweets that do no have the specified term
 
-#count_tweet_terms
+# count_tweet_terms
 
 counts the number of tweets that contain all these terms
 
@@ -253,7 +253,7 @@ print(count)
 
 *returns* an integer value that counts all the tweets containing the terms
 
-#count_tweets
+# count_tweets
 
 counts the number of tweets in a collection
 
@@ -270,7 +270,7 @@ print(count)
 
 *returns* an integer value that counts all the tweets in a collection
 
-#get_top_terms
+# get_top_terms
 
 counts thet top words in a collection, [english stop words](https://github.com/Alir3z4/stop-words/blob/25c6a0aea665871e887f155b883e950c3743ce50/english.txt) are automatically included, otherwise you can specify your own set of stopwords with python stop-wrods. the stopwords are words taht get ignored and dwill not return in the final counts
 
@@ -291,7 +291,7 @@ print(count)
 
 *returns* a dictionary that has all the top_X terms 
 
-#get_tweet_texts
+# get_tweet_texts
 
 returns a new collection where the only key will be tweets.
 
@@ -309,7 +309,7 @@ for text in collection.get_tweet_texts():
 
 *returns* an iterator that returns just the text of each tweet
 
-#get_date_range
+# get_date_range
 
 gets tweets in a date range specified by python datmetime objects
 
@@ -326,7 +326,7 @@ collection.get_date_range(datetime(2014,1,30), datetime(2014,4,30))
 
 *returns* a collection that will only return tweets from the specified datetime range
 
-#find_date_range
+# find_date_range
 
 finds the date range (min/max date in a collection)
 
@@ -355,7 +355,7 @@ elif range['date_max'] < datetime.now():
 
 *returns* a dictionary with two datetime objects
 
-#tweet_language_is
+# tweet_language_is
 
 only returns tweets where the language is the specified one (differs from [detect_tweet_language](#detect_tweet_language)  just checks the field on the tweet object reported by twitter, does not detect)
 
@@ -372,7 +372,7 @@ collection.tweet_language_is('en', 'fr')
 
 *returns* a collection where all the tweets have their text language as the specified language
 
-#detect_tweet_language
+# detect_tweet_language
 
 a filter that filters tweets based on language detetction. (differs from [tweet_language_is](#tweet_language_is) because it actually detects the language, tweet_language_is just checks the field on the tweet object reported by twitter)
 
@@ -394,7 +394,7 @@ collection.detect_tweet_language('en', 'fr')
 note: uses [langdetect](https://pypi.python.org/pypi/langdetect?) under the hood. it is a pythoh port of google language detection tool.
 
 
-#user_language_is
+# user_language_is
 
 only returns tweets where the user's specified language is the specified one
 
@@ -410,7 +410,7 @@ collection.user_language_is('en')
 
 *returns* a collection where all the tweets will come from users whose specified language matches the input
 
-#exclude_retweets
+# exclude_retweets
 
 exclueds retweets from your collection
 
@@ -427,7 +427,7 @@ collection.exclude_retweets()
 *returns* a collection where there are no retweets
 
 
-#get_retweets
+# get_retweets
 
 gets all tweets that are retweets from the collection
 
@@ -443,7 +443,7 @@ collection.get_retweets()
 
 *returns* a collection where there are only retweets
 
-#tweets_with_user_location
+# tweets_with_user_location
 
 returns tweets that have a user location
 
@@ -459,7 +459,7 @@ collection.tweets_with_user_location('CA')
 
 *returns* a collection where the places field of that tweet has the specified place
 
-#get_geo_enabled
+# get_geo_enabled
 
 returns only geotagged tweets
 
@@ -475,7 +475,7 @@ collection.get_geo_enabled()
 
 *returns* a collection that only produces geo tagged tweets
 
-#get_non_geo_enabled
+# get_non_geo_enabled
 
 returns only non geotagged tweets
 
@@ -491,7 +491,7 @@ collection.get_non_geo_enabled()
 
 *returns* a collection that only produces non geo tagged tweets
 
-#limit_number_of_tweets
+# limit_number_of_tweets
 
 limits the # of tweets a collection can output
 
@@ -513,7 +513,7 @@ for tweet in collection.limit_number_of_tweets(145):
 node: works differently than expected on datasets, it will apply this limit to each sub collection/file in the dataset, so if you have 5 files in a dataset it would apply a liit of 145 to each file in the dataset, and
 you would end up with 145 x 5 = 725 tweets.
 
-#sample
+# sample
 
 gets a sample of tweets from a collection using reservior sampling
 
@@ -534,7 +534,7 @@ for tweet in collection.sample(10):
 
 note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass
 
-#dump_to_bson
+# dump_to_bson
 
 abstract:
 ```python
@@ -556,7 +556,7 @@ dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 
 *output* a bson file with the data from your SmappCollection
 
-#dump_to_json
+# dump_to_json
 
 abstract:
 ```python
@@ -578,7 +578,7 @@ dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 
 *output* a json file with the data from your SmappCollection
 
-#dump_to_csv
+# dump_to_csv
 
 dumps a collection/dataset to a csv based on the fields you specify. can see the fields inside a tweet object [here](https://dev.twitter.com/overview/api/tweets).
 
@@ -650,7 +650,7 @@ note: empty lists `[]` will return nothing. you must specify fields.
 
 note: fields that have no value will appear empty `,,`
 
-#dump_to_sqlite_db
+# dump_to_sqlite_db
 
 dumps all tweets (only the fields you specify) to an sqlite database file
 
@@ -740,7 +740,7 @@ sqlite> select * from data;
 
 `parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
 
-#get_top_entities
+# get_top_entities
 
 returns the top twitter entites from a tweet object, you can [read about twitter entities here](https://dev.twitter.com/overview/api/entities-in-twitter-objects)
 
@@ -806,7 +806,7 @@ note: if not enough entity objects are returned they get filled into the diction
 }
 ```
 
-#get_top_hashtags
+# get_top_hashtags
 
 get the top hashtags from a collection
 
@@ -823,7 +823,7 @@ print(hashtags)
 
 *returns* the top hashtags as a dictionary
 
-#get_top_urls
+# get_top_urls
 
 get the top urls from a collection
 
@@ -840,7 +840,7 @@ print(urls)
 
 *returns* the top urls from a collection
 
-#get_top_mentions
+# get_top_mentions
 
 get the top mentions from a collection (these are @ mentions)
 
@@ -856,7 +856,7 @@ mentions = collection.get_top_mentions(40)
 
 *returns* the top @ mentions from a collection
 
-#get_top_media
+# get_top_media
 
 get the top media url references
 
@@ -873,7 +873,7 @@ print(media)
 
 *returns* the top media urls from a collection
 
-#get_top_symbols
+# get_top_symbols
 
 get the top symbols in a collection
 
@@ -890,7 +890,7 @@ print(symbols)
 
 *returns* the top symbols from a collection the number of top symbols depends on how man yspecified for input
 
-#contributors
+# contributors
 
 you might ask the difference between, pysmap and smappdragon. pysmap is easier to use but less flexible/more rigid in its implementation. smappdragon is a flexible tool fro programmers to use, you can build arbitray filters for data, pysmap is just a set of filters.
 
@@ -898,15 +898,15 @@ methods on smappdragon are lower level and more general. whereas methods on pysm
 
 another example, something like [apply_labels](https://github.com/SMAPPNYU/smapp-toolkit#apply_labels) would go on smappdragon, not pysmap.
 
-#viz 
+# viz 
 
 a set of visualization tools, basically ways to graph and visualize a [SmappCollection](#smapp_collection)
 
-#plots
+# plots
 
 a set of graph tools
 
-#bar_graph_tweet_field_grouped_by_period
+# bar_graph_tweet_field_grouped_by_period
 
 a tool that can be used to create generalized bar graphs from a smapp collection an various tweet data.
 
@@ -930,7 +930,7 @@ plots.bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', ['en', 'f
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_languages
+# bar_graph_languages
 
 make a bar graph of the number of tweets containing the specified languages
 
@@ -951,7 +951,7 @@ plots.bar_graph_languages(collection, ['en', 'fr', 'es'], 'days', datetime(2015,
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_user_languages
+# bar_graph_user_languages
 
 graph all the tweets where the users who made the tweets have one of the specified languages
 
@@ -972,7 +972,7 @@ plots.bar_graph_user_languages(collection, ['en', 'fr', 'es'], 'days', datetime(
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets
+# bar_graph_tweets
 
 graph all tweets per time period
 
@@ -993,7 +993,7 @@ bar_graph_tweets(collection, period_type, start, end, output_path)
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_urls
+# bar_graph_tweets_with_urls
 
 graph all tweets that contain urls by time period
 
@@ -1014,7 +1014,7 @@ plots.bar_graph_tweets_with_urls(collection, 'hours',  datetime(2015,9,1), datet
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_media
+# bar_graph_tweets_with_media
 
 graph all tweets that contain media (like images) by time period
 
@@ -1035,7 +1035,7 @@ plots.bar_graph_tweets_with_media(collection, 'hours',  datetime(2015,9,1), date
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_mentions
+# bar_graph_tweets_with_mentions
 
 graph all tweets that contain user mentions by time period
 
@@ -1056,7 +1056,7 @@ plots.bar_graph_tweets_with_mentions(collection, 'hours',  datetime(2015,9,1), d
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_hashtags
+# bar_graph_tweets_with_hashtags
 
 graph all tweets that contain hashtags by time period
 
@@ -1077,7 +1077,7 @@ plots.bar_graph_tweets_with_hashtags(collection, 'hours',  datetime(2015,9,1), d
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_symbols
+# bar_graph_tweets_with_symbols
 
 graph all tweets that contain symbols (like stock tickers, $AAPL, $GOOG, $TWTR) by time period
 
@@ -1098,7 +1098,7 @@ plots.bar_graph_tweets_with_symbols(collection, 'hours',  datetime(2015,9,1), da
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_retweets
+# bar_graph_tweets_with_retweets
 
 graph all tweets that are retweets by time period
 
@@ -1119,7 +1119,7 @@ plots.bar_graph_tweets_with_retweets(collection, 'hours',  datetime(2015,9,1), d
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#bar_graph_tweets_with_location
+# bar_graph_tweets_with_location
 
 graph all tweets that have a location field attached to them
 
@@ -1140,11 +1140,11 @@ plots.bar_graph_tweets_with_location(collection, 'hours',  datetime(2015,9,1), d
 
 *returns* an html graph file and opens the graph in the default browser of the user
 
-#networks
+# networks
 
 code for making network graphs of twitter data
 
-#retweet_network
+# retweet_network
 
 export a retweet graph using the `networkx` library where users are nodes, retweets are directed edges.
 
@@ -1197,6 +1197,6 @@ note: the `networkx` library also provides algorithms for [vizualization](http:/
 
 note: there are no defaults, you have to specify the fields you want.
 
-#author
+# author
 
 [yvan](https://github.com/yvan)
