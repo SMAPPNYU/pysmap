@@ -23,5 +23,5 @@ def retweet_network(collection, tweet_fields, user_fields):
         if 'retweeted_status' in tweet:
             rtu_dict = {field:replace_none(value) for field,value in tp.parse_columns_from_tweet(tweet['retweeted_status']['user'], user_fields)}
             dg.add_node(tweet['retweeted_status']['user']['id_str'], attr_dict=rtu_dict)
-            dg.add_edge(tweet['user']['id_str'], tweet['retweeted_status']['user']['id_str'], attr_dict=rtu_dict)
+            dg.add_edge(tweet['user']['id_str'], tweet['retweeted_status']['user']['id_str'], attr_dict=t_dict)
     return dg
