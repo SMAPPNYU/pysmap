@@ -1,4 +1,5 @@
-from bokeh.charts import Bar, show, output_file
+import matplotlib.pyplot as plt
+plt.style.use('seaborn')
 
 from datetime import datetime, timedelta
 from collections import OrderedDict
@@ -16,7 +17,7 @@ from smappdragon import TweetParser
   later ell do multipe fields
   output_path 
 '''
-def bar_graph_tweet_field_grouped_by_period(collection, field, values_to_match, custom_filter, period_type, start, end, output_path):
+def bar_graph_tweet_field_grouped_by_period(collection, field, values_to_match, custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title):
   if period_type == 'hours':
     time_delta = timedelta(hours=1)
   elif period_type == 'days':
@@ -64,64 +65,67 @@ def bar_graph_tweet_field_grouped_by_period(collection, field, values_to_match, 
     'tweets':[val for val in field_counts.values()]
   }
 
-  output_file(output_path)
-  show(Bar(data, 'period', values='tweets', title='tweets per period'))
+  plt.plot(data['period'], data['tweets'])
+  plt.xlabel(x_label)
+  plt.ylabel(y_label)
+  plt.title(graph_title)
+  plt.savefig(output_path)
 
-def bar_graph_languages(collection, langs_to_match, period_type, start, end, output_path):
-  bar_graph_tweet_field_grouped_by_period(collection, 'lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path)
+def bar_graph_languages(collection, langs_to_match, period_type, start, end, output_path, x_label, y_label, graph_title):
+  bar_graph_tweet_field_grouped_by_period(collection, 'lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_user_languages(collection, langs_to_match, period_type, start, end, output_path):
-  bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path)
+def bar_graph_user_languages(collection, langs_to_match, period_type, start, end, output_path, x_label, y_label, graph_title):
+  bar_graph_tweet_field_grouped_by_period(collection, 'user.lang', langs_to_match, lambda tweet:True, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets(collection, period_type, start, end, output_path):
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], lambda tweet:True, period_type, start, end, output_path)
+def bar_graph_tweets(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], lambda tweet:True, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_urls(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_urls(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if len(tweet['entities']['urls']) > 0:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_media(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_media(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if len(tweet['entities']['media']) > 0:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_mentions(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_mentions(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if len(tweet['entities']['user_mentions']) > 0:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_hashtags(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_hashtags(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if len(tweet['entities']['hashtags']) > 0:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_symbols(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_symbols(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if len(tweet['entities']['symbols']) > 0:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_retweets(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_retweets(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if 'retweeted_status' in tweet:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
 
-def bar_graph_tweets_with_locations(collection, period_type, start, end, output_path):
+def bar_graph_tweets_with_locations(collection, period_type, start, end, output_path, x_label, y_label, graph_title):
   def custom_filter(tweet):
     if 'retweeted_status' in tweet:
       return True
     return False
-  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path)
+  bar_graph_tweet_field_grouped_by_period(collection, '', [], custom_filter, period_type, start, end, output_path, x_label, y_label, graph_title)
   
