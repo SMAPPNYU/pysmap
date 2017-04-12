@@ -180,11 +180,32 @@ class TestSmappDataset(unittest.TestCase):
         count = len([tweet for tweet in dataset.get_retweets()])
         self.assertEqual(505, count)
 
-    def test_tweets_with_user_location(self):
+    def test_user_location_contains(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
         dataset = SmappDataset(['bson', file_path])
-        count = len([tweet for tweet in dataset.tweets_with_user_location('TX')])
+        count = len([tweet for tweet in dataset.user_location_contains('TX')])
         self.assertEqual(10, count)
+
+    def test_user_description_contains(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        dataset = SmappDataset(['json', file_path])
+        count = len([tweet for tweet in dataset.user_description_contains('JESUS')])
+        self.assertEqual(15, count)
+
+    def test_place_name_contains_country(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        dataset = SmappDataset(['json', file_path])
+        count = len([tweet for tweet in dataset.place_name_contains_country('United States')])
+        self.assertEqual(6, count)
+
+    def test_within_geobox(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        dataset = SmappDataset(['json', file_path])
+        # geobox here is for us mountain time
+        # i created a coordinate in our data file on the last object [-105.29, 40.33]
+        # i also added one to the json that is outside of us mountain time [-123.007053, 44.824997]
+        count = len([tweet for tweet in dataset.within_geobox(-113.95, 28.81, -100.05, 48.87)])
+        self.assertEqual(1, count)
 
     def test_get_geo_enabled(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
@@ -377,6 +398,27 @@ class TestSmappDataset(unittest.TestCase):
         dataset_two = SmappDataset(['bson', file_path])
         first_ten_tweets = list(dataset_two.limit_number_of_tweets(10))
         self.assertNotEqual(sample_tweets, first_ten_tweets)
+
+    def test_set_custom_filter_properly_filters(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        dataset_one = SmappDataset(['bson', file_path])
+        full_collection_len = len(list(dataset_one))
+        def is_tweet_a_retweet(tweet):
+            if 'retweeted' in tweet and tweet['retweeted']:
+                return True
+            else:
+                return False
+        num_retweets = len(list(dataset_one.set_custom_filter(is_tweet_a_retweet)))
+
+        dataset_two = SmappDataset(['bson', file_path])
+        def is_not_a_retweet(tweet):
+            if 'retweeted' in tweet and tweet['retweeted']:
+                return False
+            else:
+                return True
+        num_non_retweets = len(list(dataset_two.set_custom_filter(is_not_a_retweet)))
+        self.assertEqual(num_retweets + num_non_retweets, full_collection_len)
+
 
 if __name__ == '__main__':
     unittest.main()

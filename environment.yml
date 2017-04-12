@@ -10,3 +10,4 @@ dependencies:
   - stop-words>=2015.2.23.1
   - networkx>=1.11
   - pymongo>=3.2.2
+  - matplotlib>=2.0.0
