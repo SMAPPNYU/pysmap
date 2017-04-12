@@ -1280,7 +1280,7 @@ note: the `networkx` library also provides algorithms for [vizualization](http:/
 
 note: there are no defaults, you have to specify the fields you want.
 
-# developer note: '.' field splitting
+# developer note '.' field splitting:
 
 there was a habit at the lab of creating one helper function that would take a tweet and a '.' delimited list of fields, split on this character to traverse into a json and save lots of coding time and lines of code. i wanted to leave a few lines here to explain why this is a bad idea in the context of the smapp lab:
 
@@ -1291,6 +1291,24 @@ there was a habit at the lab of creating one helper function that would take a t
 3 - the obvious solution is to offer a function where the user can define a splitting character, the thing is this will be confusing to read. So in the end i conclude to go another route. In the end this would save a few lines of code and reduce readability drastically.
 
 if you want a way to declare nested traversals see: [https://github.com/SMAPPNYU/smappdragon#set_filter](https://github.com/SMAPPNYU/smappdragon#set_filter)
+
+#developer note publishing:
+
+1 - make a ~/.pypirc file with:
+
+[distutils]
+index-servers = pypi
+
+[pypi]
+repository: https://pypi.python.org/pypi
+username: YOUR_PYPI_USERNAME
+password: YOUR_PASSWORD
+
+2 - pip install twine
+
+3 - python setup.py sdist
+
+4 - twine upload sdist/*
 
 # author
 
