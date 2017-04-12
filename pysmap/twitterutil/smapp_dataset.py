@@ -204,6 +204,67 @@ class SmappDataset(object):
         cp.apply_filter_to_collections(non_geo_enabled_filter)
         return cp
 
+    def field_contains(tweet, field, *terms, **kwargs):
+        """
+        Returns true if the text in tweet[field] contains any of the terms given.
+        By default, this function is NOT case-sensitive.
+
+        `field` may be any attribute of tweets, for instance:
+            field_contains(tweet, 'text', 'nyc')
+            # will return True for tweets containing nyc
+
+        `field` may also be a path to a nested attribute, for instance:
+            field_contains(tweet, 'user.screen_name', 'bob', 'alice')
+            # will return True for usernames with bob or alice in them.
+
+        Example:
+        ========
+        field_contains(tweet, 'user.screen_name', 'obama', 'putin')
+        # true if the user's handle contains 'obama' or 'putin'
+        """
+        path = field.split('.')
+        value = tweet
+        for p in path:
+            value = value[p]
+        if kwargs.get("case_sensitive", False):
+            return any(term in value for term in terms)
+        else:
+            value = value.lower()
+            return any(term.lower() in value for term in terms)
+
+    def user_location_contains(tweet, *terms):
+        """
+        True if tweet['user']['location'] contains any of the terms.
+        """
+        return field_contains(tweet, 'user.location', *terms)
+
+    def user_description_contains(tweet, *terms):
+        """
+        True if tweet['user']['description'] contains any of the terms.
+        """
+        return field_contains(tweet, 'user.description', *terms)
+
+    def within_geobox(tweet, sw_lon, sw_lat, ne_lon, ne_lat):
+
+        if 'coordinates' not in tweet or tweet['coordinates'] is None or 'coordinates' not in tweet['coordinates']:
+            return False
+        coords = tweet['coordinates']['coordinates']
+        return coords[0] > float(sw_lon) and coords[0] < float(ne_lon) and coords[1] > float(sw_lat) and coords[1] < float(ne_lat)
+
+    def place_name_contains(tweet, *terms):
+        """
+        True if the `place` associated with the tweet contains any of the terms
+        For more information about `place see https://dev.twitter.com/overview/api/places
+
+        Example:
+        ========
+        place_name_contains(tweet, 'Kiev')
+        # true for tweets where tweet['place']['full_name'] contains 'kiev'.
+        """
+        if 'place' not in tweet or tweet['place'] is None:
+            return False
+        return field_contains(tweet, 'place.full_name', *terms) or field_contains(tweet, 'place.country', *terms)
+
     def get_top_entities(self, requested_entities):
         returndict = {}
         returnstructure = {}

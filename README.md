@@ -12,6 +12,7 @@
 - [twitterutil](#twitterutil)
     - [smapp_dataset](#smapp_dataset)
     - [smapp_collection](#smapp_collection)
+        - [set_custom_filter](#set_custom_filter)
         - [get_tweets_containing](#get_tweets_containing)
         - [get_top_terms](#get_top_terms)
         - [get_tweet_texts](#get_tweet_texts)
@@ -29,7 +30,10 @@
         - [count_tweets](#count_tweets)
         - [exclude_retweets](#exclude_retweets)
         - [get_retweets](#get_retweets)
-        - [tweets_with_user_location](#tweets_with_user_location)
+        - [user_location_contains](#user_location_contains)
+        - [user_description_contains](#user_description_contains)
+        - [place_name_contains_country](#place_name_contains_country)
+        - [within_geobox](#within_geobox)
         - [limit_number_of_tweets](#limit_number_of_tweets)
         - [tweet_language_is](#tweet_language_is)
         - [detect_tweet_language](#detect_tweet_language)
@@ -220,6 +224,30 @@ to fix it, you need to reset the default bash encoding BEFORE opening/running py
 LANG=en_US.utf8 
 ```
 
+# set_custom_filter
+
+sets a user defined function to act as a filter
+
+abstract:
+```python
+collection.set_custom_filter(TERM)
+```
+
+practical:
+```python
+def my_cust_filter(tweet):
+    if 'text' in tweet and 'cats' in tweet['text']:
+        return True
+    else:
+        return False
+
+collection.set_custom_filter(my_cust_filter)
+```
+
+*returns* a collection or dataset whese all tweets will be passed through the filter
+
+note this is just a wrapper for smappdragons [set_custom_filter](https://github.com/SMAPPNYU/smappdragon#set_custom_filter) function.
+
 # get_tweets_containing
 
 gets tweets containing the specified term.
@@ -234,7 +262,7 @@ practical:
 collection.get_tweets_containing('cats')
 ```
 
-*returns* a collections which will filter out any tweets that do no have the specified term
+*returns* a collection which will filter out any tweets that do no have the specified term
 
 # count_tweet_terms
 
@@ -443,21 +471,76 @@ collection.get_retweets()
 
 *returns* a collection where there are only retweets
 
-# tweets_with_user_location
+# user_location_contains
+
+returns tweets that have a user location that contain one of the listed terms
+
+abstract:
+```python
+collection.user_location_contains(PLACE_TERM, ANOTHER_PLACE_TERM, ETC)
+```
+
+practical:
+```python
+collection.tweets_with_user_location('CA', 'FL', 'NY', 'palm springs')
+```
+
+*returns* a collection where the user location field of that tweet has any of the specified places
+
+# user_description_contains
+
+returns tweets where the user description (for the user tweeting) contained the requested terms
+
+abstract:
+```python
+collection.user_description_contains(TERM, TERM, ETC)
+```
+
+practical:
+```python
+collection.user_description_contains('dad', 'conservative', 'texas', 'mother')
+```
+
+*returns* a collection where the user location field of that tweet has any of the specified places
+
+# place_name_contains_country
 
 returns tweets that have a user location
 
 abstract:
 ```python
-collection.tweets_with_user_location(PLACE_TERM)
+collection.place_name_contains_country(PLACE_TERM, ANOTHER_PLACE_TERM, ETC)
 ```
 
 practical:
 ```python
-collection.tweets_with_user_location('CA')
+collection.place_name_contains_country('United States', 'France', 'Spain')
 ```
 
 *returns* a collection where the places field of that tweet has the specified place
+
+note: for more information about places see https://dev.twitter.com/overview/api/places
+
+# within_geobox
+
+returns tweets that ari within a geobox
+
+abstract:
+```python
+collection.within_geobox(sw_longitude, sw_latitude, ne_longitude, ne_latitude)
+```
+
+practical:
+```python
+collection.within_geobox(-75.280303,39.8670041,-74.9557629,40.1379919)
+```
+
+*returns* a collection where the tweets streaming through will be from the stated geobox
+
+note: 
+sw_longitude, sw_latitude - the southwest corner
+ne_longitude, ne_latitude - the northeast corner
+geobox specified by points (longitude, latitude)
 
 # get_geo_enabled
 
@@ -1196,6 +1279,18 @@ note: for large graphs where the structure is interesting but the tweet text its
 note: the `networkx` library also provides algorithms for [vizualization](http://networkx.github.io/documentation/networkx-1.9.1/reference/drawing.html) and [analysis](http://networkx.github.io/documentation/networkx-1.9.1/reference/algorithms.html).
 
 note: there are no defaults, you have to specify the fields you want.
+
+# developer note: '.' field splitting
+
+there was a habit at the lab of creating one helper function that would take a tweet and a '.' delimited list of fields, split on this character to traverse into a json and save lots of coding time and lines of code. i wanted to leave a few lines here to explain why this is a bad idea in the context of the smapp lab:
+
+1 - it makes code difficult to understand for grad students, we want them to be able to see exactly what a function does without needing to be a python expert.
+
+2 - it casuse problems if you want to traverse into a json object but one of the fields you want 3 levels in has a '.' as part of its name. now twitter doesnt do this but sometimse people cahnge their data to csv, data gets messed up, or people want to use slightly different data. the tools should work for whatever people throw at them, not exclusively for twitter data.
+
+3 - the obvious solution is to offer a function where the user can define a splitting character, the thing is this will be confusing to read. So in the end i conclude to go another route. In the end this would save a few lines of code and reduce readability drastically.
+
+if you want a way to declare nested traversals see: [https://github.com/SMAPPNYU/smappdragon#set_filter](https://github.com/SMAPPNYU/smappdragon#set_filter)
 
 # author
 

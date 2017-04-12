@@ -25,7 +25,6 @@ class TestSmappCollection(unittest.TestCase):
     	collection = SmappCollection('csv', file_path)
     	self.assertTrue(len(list(collection)) > 0)
 
-    # limit before mongo because mongo should be limited or it takes too long
     def test_limit_number_of_tweets(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
@@ -120,11 +119,32 @@ class TestSmappCollection(unittest.TestCase):
         count = len([tweet for tweet in collection.get_retweets()])
         self.assertEqual(505, count)
 
-    def test_tweets_with_user_location(self):
+    def test_user_location_contains(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
     	collection = SmappCollection('bson', file_path)
-    	count = len([tweet for tweet in collection.tweets_with_user_location('TX')])
+    	count = len([tweet for tweet in collection.user_location_contains('TX')])
     	self.assertEqual(10, count)
+
+    def test_user_description_contains(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        collection = SmappCollection('json', file_path)
+        count = len([tweet for tweet in collection.user_description_contains('JESUS')])
+        self.assertEqual(15, count)
+
+    def test_place_name_contains_country(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        collection = SmappCollection('json', file_path)
+        count = len([tweet for tweet in collection.place_name_contains_country('United States')])
+        self.assertEqual(6, count)
+
+    def test_within_geobox(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        collection = SmappCollection('json', file_path)
+        # geobox here is for us mountain time
+        # i created a coordinate in our data file on the last object [-105.29, 40.33]
+        # i also added one to the json that is outside of us mountain time [-123.007053, 44.824997]
+        count = len([tweet for tweet in collection.within_geobox(-113.95, 28.81, -100.05, 48.87)])
+        self.assertEqual(1, count)
 
     def test_get_geo_enabled(self):
     	file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
@@ -268,6 +288,26 @@ class TestSmappCollection(unittest.TestCase):
         collection_two = SmappCollection('bson', file_path)
         first_ten_tweets = list(collection_two.limit_number_of_tweets(10))
         self.assertNotEqual(sample_tweets, first_ten_tweets)
+
+    def test_set_custom_filter_properly_filters(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
+        collection_one = SmappCollection('bson', file_path)
+        full_collection_len = len(list(collection_one))
+        def is_tweet_a_retweet(tweet):
+            if 'retweeted' in tweet and tweet['retweeted']:
+                return True
+            else:
+                return False
+        num_retweets = len(list(collection_one.set_custom_filter(is_tweet_a_retweet)))
+
+        collection_two = SmappCollection('bson', file_path)
+        def is_not_a_retweet(tweet):
+            if 'retweeted' in tweet and tweet['retweeted']:
+                return False
+            else:
+                return True
+        num_non_retweets = len(list(collection_two.set_custom_filter(is_not_a_retweet)))
+        self.assertEqual(num_retweets + num_non_retweets, full_collection_len)
 
 if __name__ == '__main__':
     unittest.main()

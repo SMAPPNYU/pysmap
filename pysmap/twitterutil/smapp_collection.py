@@ -11,14 +11,12 @@ from stop_words import get_stop_words
 
 class SmappCollection(object):
     def __init__(self, data_source_type, *args):
-            # non mongo collection
             if data_source_type == 'bson':
                 self.collection = smappdragon.BsonCollection(args[0])
             elif data_source_type == 'json':
                 self.collection = smappdragon.JsonCollection(args[0])
             elif data_source_type == 'csv':
                 self.collection = smappdragon.CsvCollection(args[0])
-            # mongo collection
             elif data_source_type == 'mongo':
                 self.collection = smappdragon.MongoCollection(
                     args[0],
@@ -28,13 +26,17 @@ class SmappCollection(object):
                     args[4],
                     args[5]
                 )
-            # some kinda error
             else:
                 raise IOError('Could not find your input, it\'s mispelled or doesn\'t exist.')
 
     def __iter__(self):
         for tweet in self.collection.get_iterator():
             yield tweet
+
+    def set_custom_filter(self, custom_filter):
+        cp = copy.deepcopy(self)
+        cp.collection.set_custom_filter(custom_filter)
+        return cp
 
     def get_tweet_texts(self):
         for tweet in self.collection.get_iterator():
@@ -117,11 +119,18 @@ class SmappCollection(object):
         cp.collection.set_custom_filter(tweet_is_retweet)
         return cp
 
-    def tweets_with_user_location(self, place_term):
+    def user_location_contains(self, *args):
         def user_has_location(tweet):
-            return tweet['user']['location'] and place_term in tweet['user']['location']
+            return tweet['user']['location'] and any([place_term in tweet['user']['location'] for place_term in args])
         cp = copy.deepcopy(self)
         cp.collection.set_custom_filter(user_has_location)
+        return cp
+
+    def user_description_contains(self, *args):
+        def user_description_contains_terms(tweet):
+            return tweet['user']['description'] and any([d_term in tweet['user']['description'] for d_term in args])
+        cp = copy.deepcopy(self)
+        cp.collection.set_custom_filter(user_description_contains_terms)
         return cp
 
     def get_geo_enabled(self):
@@ -140,6 +149,23 @@ class SmappCollection(object):
                 'coordinates' not in tweet['coordinates'])
         cp = copy.deepcopy(self)
         cp.collection.set_custom_filter(non_geo_enabled_filter)
+        return cp
+        
+    def within_geobox(self, sw_lon, sw_lat, ne_lon, ne_lat):
+        def tweet_is_in_geobox(tweet):
+            if tweet['coordinates'] and tweet['coordinates']['coordinates']:
+                coords = tweet['coordinates']['coordinates']
+                return coords[0] > float(sw_lon) and coords[0] < float(ne_lon) and coords[1] > float(sw_lat) and coords[1] < float(ne_lat)
+            return False
+        cp = copy.deepcopy(self)
+        cp.collection.set_custom_filter(tweet_is_in_geobox)
+        return cp
+
+    def place_name_contains_country(self, *args):
+        def place_name_contains_terms(tweet):
+            return tweet['place'] and any([d_term in tweet['place']['country'] for d_term in args])
+        cp = copy.deepcopy(self)
+        cp.collection.set_custom_filter(place_name_contains_terms)
         return cp
 
     def get_top_entities(self, requested_entities):
