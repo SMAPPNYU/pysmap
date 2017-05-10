@@ -32,6 +32,7 @@
         - [get_retweets](#get_retweets)
         - [user_location_contains](#user_location_contains)
         - [user_description_contains](#user_description_contains)
+        - [user_id_is](#user_id_is)
         - [place_name_contains_country](#place_name_contains_country)
         - [within_geobox](#within_geobox)
         - [limit_number_of_tweets](#limit_number_of_tweets)
@@ -502,6 +503,22 @@ collection.user_description_contains('dad', 'conservative', 'texas', 'mother')
 ```
 
 *returns* a collection where the user location field of that tweet has any of the specified places
+
+# user_id_is
+
+returns tweets that match one of the passed in user ids
+
+abstract:
+```python
+collection.user_id_is(ID, ID, ETC)
+```
+
+practical:
+```python
+collection.user_id_is(379851447, 149751818)
+```
+
+*returns* a collection where the user id field matches one of the passed in ids
 
 # place_name_contains_country
 
