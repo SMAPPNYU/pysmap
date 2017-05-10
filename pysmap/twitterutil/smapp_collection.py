@@ -133,6 +133,13 @@ class SmappCollection(object):
         cp.collection.set_custom_filter(user_description_contains_terms)
         return cp
 
+    def user_id_is(self, *args):
+        def user_id_created_tweet(tweet):
+            return tweet['user']['id'] and any([u_id == tweet['user']['id'] for u_id in args])
+        cp = copy.deepcopy(self)
+        cp.collection.set_custom_filter(user_id_created_tweet)
+        return cp
+
     def get_geo_enabled(self):
         def geo_enabled_filter(tweet):
             return ("coordinates" in tweet 

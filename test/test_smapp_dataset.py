@@ -192,6 +192,12 @@ class TestSmappDataset(unittest.TestCase):
         count = len([tweet for tweet in dataset.user_description_contains('JESUS')])
         self.assertEqual(15, count)
 
+    def test_user_id_is(self):
+        file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
+        dataset = SmappDataset(['json', file_path])
+        count = len([tweet for tweet in dataset.user_id_is(379851447, 149751818)])
+        self.assertEqual(77, count)
+
     def test_place_name_contains_country(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['json']['valid'])
         dataset = SmappDataset(['json', file_path])

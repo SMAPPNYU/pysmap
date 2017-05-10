@@ -197,6 +197,13 @@ class SmappDataset(object):
         cp.apply_filter_to_collections(user_description_contains_terms)
         return cp
 
+    def user_id_is(self, *args):
+        def user_id_created_tweet(tweet):
+            return tweet['user']['id'] and any([u_id == tweet['user']['id'] for u_id in args])
+        cp = copy.deepcopy(self)
+        cp.apply_filter_to_collections(user_id_created_tweet)
+        return cp
+
     def get_geo_enabled(self):
         def geo_enabled_filter(tweet):
             return ("coordinates" in tweet 
