@@ -399,6 +399,21 @@ class TestSmappDataset(unittest.TestCase):
         first_ten_tweets = list(dataset_two.limit_number_of_tweets(10))
         self.assertNotEqual(sample_tweets, first_ten_tweets)
 
+    def test_sample_chains_and_dumps(self):
+        # if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+        #     os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+
+        output_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output.bson.json')
+        collection = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
+        sample_tweets = collection.sample(10)
+        sample_tweets.dump_to_json(output_path)
+        self.assertTrue(os.path.getsize(output_path) > 0)
+        with open(output_path) as f:
+            self.assertEqual(10, len([line for line in f]))
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+
     def test_set_custom_filter_properly_filters(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
         dataset_one = SmappDataset(['bson', file_path])

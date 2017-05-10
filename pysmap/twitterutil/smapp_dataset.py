@@ -83,8 +83,9 @@ class SmappDataset(object):
                     else:
                         raise IOError('Could not find your input: {}, it\'s mispelled or doesn\'t exist.'.format(input_list_or_datasource))
 
-    #simple helper method for getting the iterators out
-    #of all collections in a SmappDataset
+    # simple helper method for getting the iterators out
+    # of all collections in a SmappDataset, sample overrides
+    # this method
     def get_collection_iterators(self):
         return itertools.chain(*[collection.get_iterator() for collection in self.collections])
 
@@ -281,15 +282,19 @@ class SmappDataset(object):
         cp.collections = [collection.set_limit(limit) for collection in cp.collections]
         return cp
 
-    def dump_to_bson(self, output_file, parallel=False):
-        for i, collection in enumerate(self.collections):
+    def dump_to_bson(self, output_file, parallel):
             if parallel:
-                filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
+                for i in range(0, prarllel):
+                    filename, file_extension = output_file.split(os.extsep, 1)
+                    filehandle = open(output_file, 'ab+')
+                    for tweet in self.collection.get_collection_iterators():
+                        filehandle.write(BSON.encode(tweet))
+                    filehandle.close()
+                    # collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
             else:
                 collection.dump_to_bson(output_file)
 
-    def dump_to_json(self, output_file, parallel=False):
+    def dump_to_json(self, output_file):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
@@ -297,21 +302,21 @@ class SmappDataset(object):
             else:
                 collection.dump_to_json(output_file)
 
-    def dump_to_csv(self, output_file, keep_fields, parallel=False):
+    def dump_to_csv(self, output_file, input_fields write_header=True, top_level=False):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), input_fields, write_header=write_header, top_level=top_level)
             else:
-                collection.dump_to_csv(output_file, keep_fields, write_header=(i == 0))
+                collection.dump_to_csv(output_file, input_fields, write_header=(i == 0))
 
-    def dump_to_sqlite_db(self, output_file, keep_fields, parallel=False):
+    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), keep_fields)
+                collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), input_fields, top_level=top_level)
             else:
-                collection.dump_to_sqlite_db(output_file, keep_fields)
+                collection.dump_to_sqlite_db(output_file, input_fields)
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
@@ -344,15 +349,21 @@ class SmappDataset(object):
         return return_counts
 
     def sample(self, k):
-        it = iter(self.get_collection_iterators())
-        sample = list(itertools.islice(it, k))
-        random.shuffle(sample)
-        for i, item in enumerate(it, start=k+1):
-            j = random.randrange(i)
-            if j < k:
-                sample[j] = item
-        for sample_value in sample:
-            yield sample_value
+        def new_get_iterators():
+            it = iter(self.get_collection_iterators())
+            sample = list(itertools.islice(it, k))
+            random.shuffle(sample)
+            for i, item in enumerate(it, start=k+1):
+                j = random.randrange(i)
+                if j < k:
+                    sample[j] = item
+            for sample_value in sample:
+                yield sample_value
+
+        cp = copy.deepcopy(self)
+        cp.get_collection_iterators = new_get_iterators
+        return cp
+
 '''
 author @yvan
 for a lower level set of tools see: https://github.com/SMAPPNYU/smappdragon

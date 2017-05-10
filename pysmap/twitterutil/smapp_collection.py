@@ -1,13 +1,16 @@
+import csv
 import abc
 import copy
 import random
+import sqlite3
 import operator
 import itertools
 import smappdragon
 
 from datetime import datetime
-from langdetect import detect, lang_detect_exception, DetectorFactory
+from bson import BSON, json_util
 from stop_words import get_stop_words
+from langdetect import detect, lang_detect_exception, DetectorFactory
 
 class SmappCollection(object):
     def __init__(self, data_source_type, *args):
@@ -217,16 +220,64 @@ class SmappCollection(object):
         return cp
 
     def dump_to_bson(self, output_file):
-        self.collection.dump_to_bson(output_file)
+        filehandle = open(output_file, 'ab+')
+        for tweet in self.collection.get_iterator():
+            filehandle.write(BSON.encode(tweet))
+        filehandle.close()
 
     def dump_to_json(self, output_file):
-        self.collection.dump_to_json(output_file)
+        filehandle = open(output_file, 'a')
+        for tweet in self.collection.get_iterator():
+            filehandle.write(json_util.dumps(tweet)+'\n')
+        filehandle.close()
         
-    def dump_to_csv(self, output_file, keep_fields):
-        self.collection.dump_to_csv(output_file, keep_fields)
+    def dump_to_csv(self, output_file, input_fields, write_header=True, top_level=False):
+        filehandle = open(output_file, 'a', encoding='utf-8')
+        writer = csv.writer(filehandle)
+        if write_header:
+            writer.writerow(input_fields)
+        tweet_parser = smappdragon.tools.tweet_parser.TweetParser()
 
-    def dump_to_sqlite_db(self, output_file, keep_fields):
-        self.collection.dump_to_sqlite_db(output_file, keep_fields)
+        for tweet in self.collection.get_iterator():
+            if top_level:
+                ret = list(zip(input_fields, [tweet.get(field) for field in input_fields]))
+            else:
+                ret = tweet_parser.parse_columns_from_tweet(tweet,input_fields)
+            ret_values = [col_val[1] for col_val in ret]
+            writer.writerow(ret_values)
+        filehandle.close()
+
+    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False):
+        def replace_none(s):
+            if s is None:
+                return 'NULL'
+            return s
+
+        tweet_parser = smappdragon.tools.tweet_parser.TweetParser()
+        column_str = ','.join([column for column in input_fields]).replace('.','__')
+        question_marks = ','.join(['?' for column in input_fields])
+
+        con = sqlite3.connect(output_file)
+        cur = con.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS data ({});".format(column_str))
+
+        insert_list = []
+        # batch insert if more than 10k tweets
+        for count,tweet in enumerate(self.collection.get_iterator()):
+            if top_level:
+                ret = list(zip(input_fields, [tweet.get(field) for field in input_fields]))
+            else:
+                ret = tweet_parser.parse_columns_from_tweet(tweet, input_fields)
+            row = [replace_none(col_val[1]) for col_val in ret]
+            insert_list.append(tuple(row))
+            if (count % 10000) == 0:
+                cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
+                con.commit()
+                insert_list = []
+        if count < 10000:
+            cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
+            con.commit()
+        con.close()
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
@@ -259,15 +310,19 @@ class SmappCollection(object):
         return return_counts
 
     def sample(self, k):
-        it = iter(self.collection.get_iterator())
-        sample = list(itertools.islice(it, k))
-        random.shuffle(sample)
-        for i, item in enumerate(it, start=k+1):
-            j = random.randrange(i)
-            if j < k:
-                sample[j] = item
-        for sample_value in sample:
-            yield sample_value
+        def new_get_iterator():
+            it = iter(self.collection.get_iterator())
+            sample = list(itertools.islice(it, k))
+            random.shuffle(sample)
+            for i, item in enumerate(it, start=k+1):
+                j = random.randrange(i)
+                if j < k:
+                    sample[j] = item
+            for sample_value in sample:
+                yield sample_value
+        cp = copy.deepcopy(self)
+        cp.collection.get_iterator = new_get_iterator
+        return cp
 
 '''
 author @yvan

@@ -607,7 +607,6 @@ collection.sample(NUMBER_OF_TWEETS_TO_SAMPLE)
 
 practical:
 ```python
-collection.sample(10)
 
 for tweet in collection.sample(10):
     print(tweet)
@@ -615,7 +614,9 @@ for tweet in collection.sample(10):
 
 *returns* a collection that only returns a sample of tweets as big as the number of tweets you specified
 
-note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass
+note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass without knowing ahead of time how man ythings are in taht dataset and still match the underlying distribution of the data.
+
+note: if you try to sample more tweets than are in a collection or dataset this method will throw an error. this is because reservior sampling does not work in this scenario. count your datasets first if you are unsure how many data points are in them.
 
 # dump_to_bson
 
@@ -679,6 +680,10 @@ collection.limit_number_of_tweets(5).dump_to_csv('/Users/kevin/work/smappwork/fi
 dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or with a dataset dumping to one file for each input
 dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], parallel=True)
+# or if you have '.' in input fields that you want interpreted literally
+collection.dump_to_csv('out_file.csv', ['id_str'], top_level=True)
+# or if you want to omit the header
+collection.dump_to_csv('out_file.csv', ['id_str'], top_level=False)
 ```
 
 *input* a path to a csv file and fields to keep
