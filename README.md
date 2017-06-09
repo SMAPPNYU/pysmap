@@ -635,10 +635,6 @@ note: you can [read more about reservior sampling here](http://www.geeksforgeeks
 
 note: if you try to sample more tweets than are in a collection or dataset this method will throw an error. this is because reservior sampling does not work in this scenario. count your datasets first if you are unsure how many data points are in them.
 
-note: if you use this [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
-
-note: if you want to sample and run filters, sample must be the last thing you do. the only thing yo ucan do after sampling and have it apply is dump. i'm working on a fix for this.
-
 # dump_to_bson
 
 abstract:
