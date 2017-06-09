@@ -636,7 +636,7 @@ dataset.dump_to_bson('/Users/blah/your_data.bson')
 dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 *input* a path to a bson file
 
@@ -660,7 +660,7 @@ dataset.dump_to_json('/Users/blah/your_data.json')
 dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 *input* a path to a json file
 
@@ -736,15 +736,13 @@ id_str,coordinates.coordinates.0,coordinates.coordinates.1,user.id_str,user.lang
 788556059317186560,,,4655522325,fr,fr,Barack Obama conseille à Donald Trump « d’arrêter de pleurnicher » -  https://t.co/eEl1mOnIwp https://t.co/8EeOGya28r,metrodakar_net,Senegal,,Wed Oct 19 01:43:09 +0000 2016,110,657,0,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,,,,
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 note: to get things inside a list you need to refer to their list index. its better to overshoot (so if you want to get 5 entites urls where there are 5) you would use `['entities.urls.0.expanded_url','entities.urls.1.expanded_url','entities.urls.2.expanded_url','entities.urls.3.expanded_url','entities.urls.4.expanded_url']`, for tweet objects with less than 5 `urls` entities this will fill out urls up to 5 urls, if there are less than 5 the extra ones will be empty `,,` fields
 
 note: empty lists `[]` will return nothing. you must specify fields.
 
 note: fields that have no value will appear empty `,,`
-
-note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_sqlite_db
 
