@@ -317,7 +317,16 @@ class SmappCollection(object):
         return return_counts
 
     def sample(self, k):
+        '''
+        this method is especially troublesome
+        i do not reccommend making any changes to it
+        you may notice it uplicates code fro smappdragon
+        there is no way around this as far as i can tell
+        it really  might screw up a lot of stuff, stip tweets
+        has been purposely omitted as it isnt supported in pysmap
+        '''
         def new_get_iterator():
+            tweet_parser = smappdragon.TweetParser()
             it = iter(self.collection.get_iterator())
             sample = list(itertools.islice(it, k))
             random.shuffle(sample)
@@ -325,8 +334,12 @@ class SmappCollection(object):
                 j = random.randrange(i)
                 if j < k:
                     sample[j] = item
-            for sample_value in sample:
-                yield sample_value
+            for tweet in sample:
+                if self.collection.limit != 0 and self.collection.limit <= count:
+                    return
+                elif tweet_parser.tweet_passes_filter(self.collection.filter, tweet) \
+                and tweet_parser.tweet_passes_custom_filter_list(self.collection.custom_filters, tweet):
+                    yield tweet
         cp = copy.deepcopy(self)
         cp.collection.get_iterator = new_get_iterator
         return cp
