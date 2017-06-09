@@ -400,8 +400,8 @@ class TestSmappDataset(unittest.TestCase):
         self.assertNotEqual(sample_tweets, first_ten_tweets)
 
     def test_sample_chains_and_dumps(self):
-        # if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
-        #     os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
 
         output_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output.bson.json')
         collection = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])

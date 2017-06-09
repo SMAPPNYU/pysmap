@@ -10,6 +10,7 @@ import itertools
 import smappdragon
 
 from datetime import datetime
+from bson import BSON, json_util
 from pysmap.twitterutil.smapp_collection import SmappCollection
 from langdetect import detect, lang_detect_exception, DetectorFactory
 from stop_words import get_stop_words
@@ -282,7 +283,7 @@ class SmappDataset(object):
         cp.collections = [collection.set_limit(limit) for collection in cp.collections]
         return cp
 
-    def dump_to_bson(self, output_file, parallel):
+    def dump_to_bson(self, output_file, parallel=False):
             if parallel:
                 for i in range(0, prarllel):
                     filename, file_extension = output_file.split(os.extsep, 1)
@@ -294,7 +295,42 @@ class SmappDataset(object):
             else:
                 collection.dump_to_bson(output_file)
 
-    def dump_to_json(self, output_file):
+        # for i, collection in enumerate(self.collections):
+        #     if parallel:
+        #         filename, file_extension = output_file.split(os.extsep, 1)
+        #         collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
+        #     else:
+        #         collection.dump_to_bson(output_file)
+
+        # if parallel:
+        #     for i in range(0, parallel):
+        #         filename, file_extension = output_file.split(os.extsep, 1)
+        #         filehandle = open(output_file, 'ab+')
+        #         for tweet in self.collection.get_collection_iterators():
+        #             filehandle.write(BSON.encode(tweet))
+        #         filehandle.close()
+        #         # collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
+        # else:
+        #     collection.dump_to_bson(output_file)
+
+        if parallel:
+            filename, file_extension = output_file.split(os.extsep, 1)
+            for i,collection in enumerate(self.collections):
+                filehandle = open('{}_{}.{}'.format(filename, i, file_extension), 'ab+')
+                for tweet in collection.get_iterator():
+                    filehandle.write(BSON.encode(tweet))
+                filehandle.close()
+        else:
+            filehandle = open(output_file, 'ab+')
+            for collection in self.collections:
+                for tweet in collection.get_iterator():
+                    filehandle.write(BSON.encode(tweet))
+            filehandle.close()
+
+    def dump_to_json(self, output_file, parallel=False):
+        # the reason this implementation doesnt work is because 
+        # it doestn access the get_collection_iterators
+        # which is what get overidden by the reservoir sample.
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
@@ -302,7 +338,7 @@ class SmappDataset(object):
             else:
                 collection.dump_to_json(output_file)
 
-    def dump_to_csv(self, output_file, input_fields write_header=True, top_level=False):
+    def dump_to_csv(self, output_file, input_fields, write_header=True, top_level=False, parallel=False):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
@@ -310,7 +346,7 @@ class SmappDataset(object):
             else:
                 collection.dump_to_csv(output_file, input_fields, write_header=(i == 0))
 
-    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False):
+    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False, parallel=False):
         for i, collection in enumerate(self.collections):
             if parallel:
                 filename, file_extension = output_file.split(os.extsep, 1)
