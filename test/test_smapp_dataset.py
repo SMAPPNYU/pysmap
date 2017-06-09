@@ -277,51 +277,54 @@ class TestSmappDataset(unittest.TestCase):
     def test_dump_to_bson_parallel(self):
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson')
 
         output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.bson'
         dataset = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
-        dataset.dump_to_bson(output_path, parallel=True)
+        dataset.dump_to_bson(output_path, num_files=2)
         self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_0.bson') > 0)
+        self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_1.bson') > 0)
 
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson')
 
     def test_dump_to_json_parallel(self):
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson.json'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson.json')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson.json')
 
         output_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output.bson.json')
         dataset = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
-        dataset.dump_to_json(output_path, parallel=True)
+        dataset.dump_to_json(output_path, num_files=2)
         self.assertTrue(os.path.getsize('{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output_0.bson.json')) > 0)
+        self.assertTrue(os.path.getsize('{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output_1.bson.json')) > 0)
 
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson.json'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.bson.json')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.bson.json')
 
     def test_dump_to_csv_parallel(self):
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv')
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.csv'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.csv')
 
         output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.csv'
         dataset = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
-        dataset.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], parallel=True)
+        dataset.dump_to_csv(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], num_files=2)
         self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_0.csv') > 0)
+        self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_1.csv') > 0)
 
         if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv'):
             os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.csv')
-
-    def test_dump_to_sqlite_db_parallel(self):
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db'):
-            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db')
-
-        output_path = os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output.db'
-        dataset = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
-        dataset.dump_to_sqlite_db(output_path, ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], parallel=True)
-        self.assertTrue(os.path.getsize(os.path.dirname(os.path.realpath(__file__)) + '/' + 'data/output_0.db') > 0)
-
-        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db'):
-            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_0.db')
-
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.csv'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output_1.csv')
+            
     def test_get_top_hashtags(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])
         dataset = SmappDataset(['bson', file_path])
@@ -404,6 +407,21 @@ class TestSmappDataset(unittest.TestCase):
         dataset_two = SmappDataset(['bson', file_path])
         first_ten_tweets = list(dataset_two.limit_number_of_tweets(10))
         self.assertNotEqual(sample_tweets, first_ten_tweets)
+
+    def test_sample_chains_and_dumps(self):
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
+
+        output_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)),'data/output.bson.json')
+        collection = SmappDataset(['bson', os.path.dirname(os.path.realpath(__file__)) +'/'+ config['bson']['valid']])
+        sample_tweets = collection.sample(10)
+        sample_tweets.dump_to_json(output_path)
+        self.assertTrue(os.path.getsize(output_path) > 0)
+        with open(output_path) as f:
+            self.assertEqual(10, len([line for line in f]))
+
+        if os.path.exists(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json'):
+            os.remove(os.path.dirname(os.path.abspath(__file__))+'/data/output.bson.json')
 
     def test_set_custom_filter_properly_filters(self):
         file_path = '{}/{}'.format(os.path.dirname(os.path.realpath(__file__)), config['bson']['valid'])

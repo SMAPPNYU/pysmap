@@ -624,7 +624,6 @@ collection.sample(NUMBER_OF_TWEETS_TO_SAMPLE)
 
 practical:
 ```python
-collection.sample(10)
 
 for tweet in collection.sample(10):
     print(tweet)
@@ -632,7 +631,11 @@ for tweet in collection.sample(10):
 
 *returns* a collection that only returns a sample of tweets as big as the number of tweets you specified
 
-note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass
+note: you can [read more about reservior sampling here](http://www.geeksforgeeks.org/reservoir-sampling/) and [here](https://en.wikipedia.org/wiki/Reservoir_sampling). reservior sampling allows us to sample a data set in one pass without knowing ahead of time how man ythings are in taht dataset and still match the underlying distribution of the data.
+
+note: if you try to sample more tweets than are in a collection or dataset this method will throw an error. this is because reservior sampling does not work in this scenario. count your datasets first if you are unsure how many data points are in them.
+
+note: if you use this [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_bson
 
@@ -650,11 +653,13 @@ dataset.dump_to_bson('/Users/blah/your_data.bson')
 dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 *input* a path to a bson file
 
 *output* a bson file with the data from your SmappCollection
+
+note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_json
 
@@ -672,11 +677,13 @@ dataset.dump_to_json('/Users/blah/your_data.json')
 dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 *input* a path to a json file
 
 *output* a json file with the data from your SmappCollection
+
+note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_csv
 
@@ -696,6 +703,10 @@ collection.limit_number_of_tweets(5).dump_to_csv('/Users/kevin/work/smappwork/fi
 dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or with a dataset dumping to one file for each input
 dataset.dump_to_csv('/Users/blah/your_data.csv', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'], parallel=True)
+# or if you have '.' in input fields that you want interpreted literally
+collection.dump_to_csv('out_file.csv', ['id_str'], top_level=True)
+# or if you want to omit the header
+collection.dump_to_csv('out_file.csv', ['id_str'], top_level=False)
 ```
 
 *input* a path to a csv file and fields to keep
@@ -742,7 +753,7 @@ id_str,coordinates.coordinates.0,coordinates.coordinates.1,user.id_str,user.lang
 788556059317186560,,,4655522325,fr,fr,Barack Obama conseille à Donald Trump « d’arrêter de pleurnicher » -  https://t.co/eEl1mOnIwp https://t.co/8EeOGya28r,metrodakar_net,Senegal,,Wed Oct 19 01:43:09 +0000 2016,110,657,0,http://www.metrodakar.net/barack-obama-conseille-a-donald-trump-darreter-de-pleurnicher/,,,,
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+`num files` - (similar to the former the parallel argument) with the 'num_files' argument you can tell your dataset to write to a specific number of files. the method functionality had to be changed to fix the sample method. the data set will try to write evenly to each file.
 
 note: to get things inside a list you need to refer to their list index. its better to overshoot (so if you want to get 5 entites urls where there are 5) you would use `['entities.urls.0.expanded_url','entities.urls.1.expanded_url','entities.urls.2.expanded_url','entities.urls.3.expanded_url','entities.urls.4.expanded_url']`, for tweet objects with less than 5 `urls` entities this will fill out urls up to 5 urls, if there are less than 5 the extra ones will be empty `,,` fields
 
@@ -838,7 +849,7 @@ sqlite> select * from data;
 686662539913084928|491074580|RT @PopSci: iOS 9.3 update will tint your screen at night, for your health https://t.co/zrDt4TsoXB https://t.co/yXCEGQPHWp|http://pops.ci/cJWqhM|NULL|http://twitter.com/PopSci/status/686661925267206144/photo/1|NULL
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+note: the dump to sqlite method does not have a num_files (used to paralel) argument because the performance is bad with the sample method. 
 
 # get_top_entities
 
