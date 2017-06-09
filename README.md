@@ -618,6 +618,8 @@ note: you can [read more about reservior sampling here](http://www.geeksforgeeks
 
 note: if you try to sample more tweets than are in a collection or dataset this method will throw an error. this is because reservior sampling does not work in this scenario. count your datasets first if you are unsure how many data points are in them.
 
+note: if you use this [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
+
 # dump_to_bson
 
 abstract:
@@ -640,6 +642,8 @@ dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 
 *output* a bson file with the data from your SmappCollection
 
+note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
+
 # dump_to_json
 
 abstract:
@@ -661,6 +665,8 @@ dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 *input* a path to a json file
 
 *output* a json file with the data from your SmappCollection
+
+note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_csv
 
@@ -737,6 +743,8 @@ note: to get things inside a list you need to refer to their list index. its bet
 note: empty lists `[]` will return nothing. you must specify fields.
 
 note: fields that have no value will appear empty `,,`
+
+note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
 # dump_to_sqlite_db
 
@@ -826,7 +834,7 @@ sqlite> select * from data;
 686662539913084928|491074580|RT @PopSci: iOS 9.3 update will tint your screen at night, for your health https://t.co/zrDt4TsoXB https://t.co/yXCEGQPHWp|http://pops.ci/cJWqhM|NULL|http://twitter.com/PopSci/status/686661925267206144/photo/1|NULL
 ```
 
-`parallel` - with the 'parallel' option set to true the dump method works a little differently for SmappDataset objects, it does not dump to one file but rather a file for each subsection in the dataset, so each SmappCollection, input, or SmappDataset inside the SmappDataset get its own file.
+note: the dump to sqlite method does not have a num_files (used to paralel) argument because the performance is bad with the sample method. 
 
 # get_top_entities
 

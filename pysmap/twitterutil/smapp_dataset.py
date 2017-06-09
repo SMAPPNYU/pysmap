@@ -1,9 +1,11 @@
 import os
 import re
+import csv
 import abc
 import copy
 import glob
 import random
+import sqlite3
 import pymongo
 import operator
 import itertools
@@ -283,76 +285,131 @@ class SmappDataset(object):
         cp.collections = [collection.set_limit(limit) for collection in cp.collections]
         return cp
 
-    def dump_to_bson(self, output_file, parallel=False):
-            if parallel:
-                for i in range(0, prarllel):
-                    filename, file_extension = output_file.split(os.extsep, 1)
-                    filehandle = open(output_file, 'ab+')
-                    for tweet in self.collection.get_collection_iterators():
-                        filehandle.write(BSON.encode(tweet))
-                    filehandle.close()
-                    # collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
-            else:
-                collection.dump_to_bson(output_file)
+    def dump_to_bson(self, output_file, num_files=1):
+        filehandles = [None]*num_files
+        filename, file_extension = output_file.split(os.extsep, 1)
 
-        # for i, collection in enumerate(self.collections):
-        #     if parallel:
-        #         filename, file_extension = output_file.split(os.extsep, 1)
-        #         collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
-        #     else:
-        #         collection.dump_to_bson(output_file)
-
-        # if parallel:
-        #     for i in range(0, parallel):
-        #         filename, file_extension = output_file.split(os.extsep, 1)
-        #         filehandle = open(output_file, 'ab+')
-        #         for tweet in self.collection.get_collection_iterators():
-        #             filehandle.write(BSON.encode(tweet))
-        #         filehandle.close()
-        #         # collection.dump_to_bson('{}_{}.{}'.format(filename, i, file_extension))
-        # else:
-        #     collection.dump_to_bson(output_file)
-
-        if parallel:
-            filename, file_extension = output_file.split(os.extsep, 1)
-            for i,collection in enumerate(self.collections):
-                filehandle = open('{}_{}.{}'.format(filename, i, file_extension), 'ab+')
-                for tweet in collection.get_iterator():
-                    filehandle.write(BSON.encode(tweet))
-                filehandle.close()
+        # open all filehandles
+        if num_files == 1:
+            filehandles[0] = open(output_file, 'ab+')
         else:
-            filehandle = open(output_file, 'ab+')
-            for collection in self.collections:
-                for tweet in collection.get_iterator():
-                    filehandle.write(BSON.encode(tweet))
-            filehandle.close()
+            # open all filehandles
+            filename, file_extension = output_file.split(os.extsep, 1)
+            for i in range(num_files):
+                filehandles[i] = open('{}_{}.{}'.format(filename, i, file_extension), 'ab+')
 
-    def dump_to_json(self, output_file, parallel=False):
-        # the reason this implementation doesnt work is because 
-        # it doestn access the get_collection_iterators
-        # which is what get overidden by the reservoir sample.
-        for i, collection in enumerate(self.collections):
-            if parallel:
-                filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_json('{}_{}.{}'.format(filename, i, file_extension))
+        # write the tweets as evenly 
+        # as possible in each file
+        tracker = 0 
+        for tweet in self.get_collection_iterators():
+            filehandles[tracker].write(BSON.encode(tweet))
+            if tracker == num_files-1:
+                tracker = 0
             else:
-                collection.dump_to_json(output_file)
+                tracker += 1
 
-    def dump_to_csv(self, output_file, input_fields, write_header=True, top_level=False, parallel=False):
-        for i, collection in enumerate(self.collections):
-            if parallel:
-                filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_csv('{}_{}.{}'.format(filename, i, file_extension), input_fields, write_header=write_header, top_level=top_level)
-            else:
-                collection.dump_to_csv(output_file, input_fields, write_header=(i == 0))
+        # close all filehandles
+        for fh in filehandles:
+            fh.close()
 
-    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False, parallel=False):
-        for i, collection in enumerate(self.collections):
-            if parallel:
-                filename, file_extension = output_file.split(os.extsep, 1)
-                collection.dump_to_sqlite_db('{}_{}.{}'.format(filename, i, file_extension), input_fields, top_level=top_level)
+    def dump_to_json(self, output_file, num_files=1):
+        filehandles = [None]*num_files
+
+        if num_files == 1:
+            filehandles[0] = open(output_file, 'a')
+        else:
+            # open all filehandles
+            filename, file_extension = output_file.split(os.extsep, 1)
+            for i in range(num_files):
+                filehandles[i] = open('{}_{}.{}'.format(filename, i, file_extension), 'a')
+
+        # write the tweets as evenly 
+        # as possible in each file
+        tracker = 0 
+        for tweet in self.get_collection_iterators():
+            filehandles[tracker].write(json_util.dumps(tweet)+'\n')
+            if tracker == num_files-1:
+                tracker = 0
             else:
-                collection.dump_to_sqlite_db(output_file, input_fields)
+                tracker += 1
+
+        # close all filehandles
+        for fh in filehandles:
+            fh.close()
+
+    def dump_to_csv(self, output_file, input_fields, write_header=True, top_level=False, num_files=1):
+        filehandles = [None]*num_files
+        writers = [None]*num_files
+
+        if num_files == 1:
+            filehandles[0] = open(output_file, 'a', encoding='utf-8')
+            writers[0] = csv.writer(filehandles[0])
+            if write_header:
+                writers[0].writerow(input_fields)
+        else:
+            # open all filehandles
+            filename, file_extension = output_file.split(os.extsep, 1)
+            for i in range(num_files):
+                filehandles[i] = open('{}_{}.{}'.format(filename, i, file_extension), 'a')
+                writers[i] = csv.writer(filehandles[i])
+                if write_header:
+                    writers[i].writerow(input_fields)
+
+        tweet_parser = smappdragon.tools.tweet_parser.TweetParser()
+
+                # write the tweets as evenly 
+        # as possible in each file
+        tracker = 0 
+        for tweet in self.get_collection_iterators():
+            if top_level:
+                ret = list(zip(input_fields, [tweet.get(field) for field in input_fields]))
+            else:
+                ret = tweet_parser.parse_columns_from_tweet(tweet,input_fields)
+            ret_values = [col_val[1] for col_val in ret]
+            writers[tracker].writerow(ret_values)
+
+            if tracker == num_files-1:
+                tracker = 0
+            else:
+                tracker += 1
+
+       # close all filehandles
+        for fh in filehandles:
+            fh.close()
+
+    def dump_to_sqlite_db(self, output_file, input_fields, top_level=False, num_files=1):
+        def replace_none(s):
+            if s is None:
+                return 'NULL'
+            return s
+        cons = [None]*num_files
+        cursors = [None]*num_files
+
+        tweet_parser = smappdragon.tools.tweet_parser.TweetParser()
+        column_str = ','.join([column for column in input_fields]).replace('.','__')
+        question_marks = ','.join(['?' for column in input_fields])
+
+        con = sqlite3.connect(output_file)
+        cur = con.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS data ({});".format(column_str))
+
+        insert_list = []
+        # batch insert if more than 10k tweets
+        for tweet in self.get_collection_iterators():
+            if top_level:
+                ret = list(zip(input_fields, [tweet.get(field) for field in input_fields]))
+            else:
+                ret = tweet_parser.parse_columns_from_tweet(tweet, input_fields)
+            row = [replace_none(col_val[1]) for col_val in ret]
+            insert_list.append(tuple(row))
+            if (len(insert_list) % 10000) == 0:
+                cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
+                con.commit()
+                insert_list = []
+        if len(insert_list) < 10000:
+            cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
+            con.commit()
+        con.close()
 
     def get_top_hashtags(self, num_top):
         return self.get_top_entities({'hashtags':num_top})
