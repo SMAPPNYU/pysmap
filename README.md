@@ -549,7 +549,7 @@ collection.within_geobox(sw_longitude, sw_latitude, ne_longitude, ne_latitude)
 
 practical:
 ```python
-collection.within_geobox(-75.280303,39.8670041,-74.9557629,40.1379919)
+collection.within_geobox(-77.042484, 38.886323, -77.010384, 38.894006)
 ```
 
 *returns* a collection where the tweets streaming through will be from the stated geobox
