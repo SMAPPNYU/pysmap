@@ -710,6 +710,8 @@ collection.dump_to_csv('out_file.csv', ['id_str'], top_level=False)
 *input* a path to a csv file and fields to keep
 
 ```python
+import pysmap
+
 collection = pysmap.SmappCollection('json','/scratch/smapp/us_election_hillary_2016/data/us_election_hillary_2016_data__10_18_2016__00_00_00__23_59_59.json')
 # or dataset
 dataset = pysmap.SmappDataset(
@@ -770,6 +772,8 @@ collection.dump_to_sqlite_db('/PATH/TO/OUTPUT/FILE.db', ['FIELD1', 'FIELD2', 'FI
 
 pratical:
 ```python
+import pysmap
+
 collection.dump_to_sqlite_db('~/smappstuff/file.db', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
 # or 
 collection.limit_number_of_tweets(5).dump_to_sqlite_db('/Users/kevin/work/smappwork/file.db', ['id_str', 'entities.hashtags.0', 'entities.hashtags.1'])
