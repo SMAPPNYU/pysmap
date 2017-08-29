@@ -7,7 +7,6 @@ from pysmap import SmappDataset, SmappCollection
 from smappdragon import BsonCollection
 
 class TestSmappDataset(unittest.TestCase):
-
     def test_control(self):
         self.assertTrue(True)
 

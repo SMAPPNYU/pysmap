@@ -8,7 +8,6 @@ from pysmap import SmappCollection
 from pysmap import networks
 
 class TestNetworks(unittest.TestCase):
-
     def test_control(self):
         self.assertTrue(True)
 

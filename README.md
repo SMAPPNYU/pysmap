@@ -59,6 +59,8 @@
         - [bar_graph_tweets_with_locations](#bar_graph_tweets_with_locations)
     - [networks](#networks)
         - [retweet_network](#retweet_network)
+- [models](#models)
+    -[crowd_model](#crowd_model)
 
 # installation
 
@@ -1309,6 +1311,40 @@ note: for large graphs where the structure is interesting but the tweet text its
 note: the `networkx` library also provides algorithms for [vizualization](http://networkx.github.io/documentation/networkx-1.9.1/reference/drawing.html) and [analysis](http://networkx.github.io/documentation/networkx-1.9.1/reference/algorithms.html).
 
 note: there are no defaults, you have to specify the fields you want.
+
+
+# models
+
+pretrained models for various tasks
+
+
+# crowd_model
+
+a model for detecting crowds of people
+
+usage:
+```
+cm = CrowdModel(PATH_TO_DOWNLOAD_MODEL_TO, dl=True, talk=True)
+# or 
+cm = CrowdModel('/Users/yvan/Downloads/crowdv1.model', dl=True, talk=False)
+
+files = ['img1.jpg', 'img2.jpg']
+preds = cm.predict_files(files)
+```
+
+`dl` - whith or not the model class shoudl download the model file (by default set to True, if the file dosent exist the calss will try to download it anyways), usually you will want this set to False
+
+`talk` - the class prints out what it's doing, set to False by default.
+
+*input*
+
+a model path to download or an already downloaded model path,
+
+image file names or imag data in a numpy array
+
+*output*
+
+probability of image being a crowd
 
 # developer note '.' field splitting:
 

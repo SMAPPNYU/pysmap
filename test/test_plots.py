@@ -7,7 +7,6 @@ from pysmap import SmappCollection
 from pysmap import plots
 
 class TestPlots(unittest.TestCase):
-
     def test_control(self):
         self.assertTrue(True)
 
