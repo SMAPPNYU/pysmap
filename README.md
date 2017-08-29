@@ -1347,7 +1347,7 @@ preds = cm.predict_imgs(imgs)
 
 `talk` - the class prints out what it's doing, set to False by default.
 
-note: images on disk will be resized to 224x224, if you put yoru own image data it should be sized 224x224x3, when i doubt check the function's docstring with ?predict_imgs
+note: images on disk will be resized to 224x224, if you put your own image data it should be sized 224x224x3, when i doubt check the function's docstring with ?predict_imgs
 
 *input*
 
