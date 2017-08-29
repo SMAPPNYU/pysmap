@@ -60,7 +60,7 @@
     - [networks](#networks)
         - [retweet_network](#retweet_network)
 - [models](#models)
-    -[crowd_model](#crowd_model)
+    - [crowd_model](#crowd_model)
 
 # installation
 
