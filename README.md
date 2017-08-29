@@ -1324,17 +1324,30 @@ a model for detecting crowds of people
 
 usage:
 ```
-cm = CrowdModel(PATH_TO_DOWNLOAD_MODEL_TO, dl=True, talk=True)
-# or 
-cm = CrowdModel('/Users/yvan/Downloads/crowdv1.model', dl=True, talk=False)
+#dowloads the model the this path and loads it
+cm = CrowdModel('/Users/yvan/Downloads/crowdv1.model', dl=True, talk=True)
+# or just load the model from this path (default behavior)
+cm = CrowdModel('/Users/yvan/Downloads/crowdv1.model', dl=False, talk=False)
 
+# predict from filenames
 files = ['img1.jpg', 'img2.jpg']
 preds = cm.predict_files(files)
+
+# or predict from imag data (here i used opencv to read images)
+imgs = np.zeros((len(files),224,224,3))
+for i, file in enumerate(files):
+    img = cv2.imread(file).astype('float64')
+    img = cv2.resize(img, (224,224))
+    imgs[i] = img
+cm = CrowdModel('/Users/yvan/Downloads/crowdv1.model', dl=False, talk=False)
+preds = cm.predict_imgs(imgs)
 ```
 
-`dl` - whith or not the model class shoudl download the model file (by default set to True, if the file dosent exist the calss will try to download it anyways), usually you will want this set to False
+`dl` - whether or not the model class should download the model file (by default set to False, if the the model paht you give dosent exist it will try to donwload anyways)
 
 `talk` - the class prints out what it's doing, set to False by default.
+
+note: images on disk will be resized to 224x224, if you put yoru own image data it should be sized 224x224x3, when i doubt check the function's docstring with ?predict_imgs
 
 *input*
 

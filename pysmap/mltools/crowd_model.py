@@ -18,7 +18,7 @@ def unzip_file(local_url, model_path):
 class CrowdModel(SmappModel):
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, model_path, model_dl='http://165.227.83.131:82/', dl=True, talk=True):
+    def __init__(self, model_path, model_dl='http://165.227.83.131:82/', dl=False, talk=True):
         if dl or not os.path.exists(model_path):
             url = os.path.join(model_dl,'crowdv1.h5.gz')
             local_url = os.path.join('/'.join(model_path.split('/')[:-1]),'crowdv1.h5.gz')
