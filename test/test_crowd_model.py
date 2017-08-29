@@ -1,11 +1,11 @@
 import numpy as np
-import os, sys, unittest, cv2
+import os, sys, unittest, cv2, warnings
 
 from datetime import datetime
 from test.config import config
 from pysmap.mltools.crowd_model import CrowdModel
 from keras.applications.resnet50 import preprocess_input
-from matplotlib.testing.decorators import image_comparison
+# from matplotlib.testing.decorators import image_comparison
 
 class TestCrowdModel(unittest.TestCase):
     def test_control(self):
@@ -84,4 +84,5 @@ class TestCrowdModel(unittest.TestCase):
     #     view_predictions(imgs, preds, np.array([[1],[0]]), 0, 2)
 
 if __name__ == '__main__':
+    warnings.filterwarnings("ignore")
     unittest.main()
