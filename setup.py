@@ -20,7 +20,7 @@ setup(name='pysmap',
 	  'pytz>=2016.4',
 	  'networkx>=1.11',
 	  'keras>=2.0.8',
-	  'python-opencv>=3.3.0.9',
+	  'opencv-python>=3.3.0.9',
 	  'tensorflow>=1.3.0',
 	  'h5py>=2.7.0'
 	]
