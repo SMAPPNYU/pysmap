@@ -270,18 +270,18 @@ class SmappCollection(object):
 
         insert_list = []
         # batch insert if more than 10k tweets
-        for count,tweet in enumerate(self.collection.get_iterator()):
+        for tweet in self.collection.get_iterator():
             if top_level:
                 ret = list(zip(input_fields, [tweet.get(field) for field in input_fields]))
             else:
                 ret = tweet_parser.parse_columns_from_tweet(tweet, input_fields)
             row = [replace_none(col_val[1]) for col_val in ret]
             insert_list.append(tuple(row))
-            if (count % 10000) == 0:
+            if (len(insert_list) % 10000) == 0:
                 cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
                 con.commit()
                 insert_list = []
-        if count < 10000:
+        if len(insert_list) < 10000:
             cur.executemany("INSERT INTO data ({}) VALUES ({});".format(column_str, question_marks), insert_list)
             con.commit()
         con.close()
