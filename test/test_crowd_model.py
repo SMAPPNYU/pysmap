@@ -68,21 +68,6 @@ class TestCrowdModel(unittest.TestCase):
         assert preds[0][0] > 0.9 # should be 0.997
         assert preds[1][0] < 0.1 # sould be 0.00
 
-    # @image_comparison(baseline_images=['test_view_preds'])
-    # def test_view_preds(self):
-    #     files = [config['crowd']['crowd_img'], config['crowd']['noncrowd_img']]
-    #     imgs = np.zeros((len(files),224,224,3))
-    #     for i, file in enumerate(files):
-    #         img = cv2.imread(file).astype('float64')
-    #         img = cv2.resize(img, (224,224))
-    #         imgs[i] = img
-    #     cm = CrowdModel(config['crowd']['resnet50'], dl=False, talk=False)
-    #     preds = cm.predict_imgs(imgs)
-    #     assert len(preds) > 0
-    #     assert preds[0][0] > 0.9 # should be 0.997
-    #     assert preds[1][0] < 0.1 # sould be 0.00
-    #     view_predictions(imgs, preds, np.array([[1],[0]]), 0, 2)
-
 if __name__ == '__main__':
     warnings.filterwarnings("ignore")
     unittest.main()
