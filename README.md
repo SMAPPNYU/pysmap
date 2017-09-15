@@ -661,6 +661,8 @@ dataset.dump_to_bson('/Users/blah/your_data.bson', parallel=True)
 
 note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
 
+note: all file dumps happen in append mode. This means that if the file you are trying to dump to already exists it will append data into this file. So we recommend dumping to new files when you run dumps.
+
 # dump_to_json
 
 abstract:
@@ -684,6 +686,8 @@ dataset.dump_to_json('/Users/blah/your_data.json', parallel=True)
 *output* a json file with the data from your SmappCollection
 
 note: if you use the [sample](#sample) method you can no longer use the 'parallel' argument to any dump methods, sample has to override the iterators for aech collection, essentially stripping us of the original iterators.
+
+note: all file dumps happen in append mode. This means that if the file you are trying to dump to already exists it will append data into this file. So we recommend dumping to new files when you run dumps.
 
 # dump_to_csv
 
@@ -762,6 +766,8 @@ note: to get things inside a list you need to refer to their list index. its bet
 note: empty lists `[]` will return nothing. you must specify fields.
 
 note: fields that have no value will appear empty `,,`
+
+note: all file dumps happen in append mode. This means that if the file you are trying to dump to already exists it will append data into this file. So we recommend dumping to new files when you run dumps.
 
 # dump_to_sqlite_db
 
@@ -854,6 +860,8 @@ sqlite> select * from data;
 ```
 
 note: the dump to sqlite method does not have a num_files (used to paralel) argument because the performance is bad with the sample method. 
+
+note: all file dumps happen in append mode. This means that if the file you are trying to dump to already exists it will append data into this file. So we recommend dumping to new files when you run dumps.
 
 # get_top_entities
 
