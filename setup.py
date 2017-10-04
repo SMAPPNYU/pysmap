@@ -2,8 +2,8 @@ import sys
 from setuptools import setup
 
 setup(name='pysmap',
-	packages=['pysmap', 'pysmap.twitterutil', 'pysmap.viz'],
-	version='0.0.41',
+	packages=['pysmap', 'pysmap.twitterutil', 'pysmap.viz', 'pysmap.mltools'],
+	version='0.0.42',
 	description='pysmap is a set of tools for working with twitter data',
 	author='yvan',
 	author_email='yns207@nyu.edu',
